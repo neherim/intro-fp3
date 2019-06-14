@@ -1,0 +1,100 @@
+#+REVEAL_EXTRA_CSS: ./css/local.css
+#+REVEAL_TRANS: fade
+#+REVEAL_THEME: moon
+#+REVEAL_PLUGINS: (notes)
+#+REVEAL_DEFAULT_FRAG_STYLE: roll-in
+#+OPTIONS: toc:nil num:nil reveal_slide_number:nil author:nil date:nil timestamp:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+TITLE: Introduction to Functional Programming pt. 3
+
+* FP Patterns
+#+BEGIN_NOTES
+Functional programming design patterns by Scott Wlaschin (Скотт Влашин)
+Функциональное программирование часто критикуют за использование математического
+жаргона. Термины вроде зигохистоморфный препроморфизм конечно не помогают
+продавать ФП.
+Если посмотреть на паттерны ООП, то названия будут более привычными для нас
+"Мост, Визитор, SOLID", но сами эти понятия довольно размытые.
+
+В ФП паттерны имеют под собой математическую основу со своими законами, в ООП же
+любой паттерн можно реализовать множеством способов и это не будет ошибкой.
+#+END_NOTES
+
+#+BEGIN_LEFTCOL
+ * Semigroup
+ * Monoid
+ * Functor
+ * Monad
+ * Catamorphism
+#+END_LEFTCOL
+
+#+BEGIN_RIGHTCOL
+#+attr_reveal: :frag (roll-in)
+ * Appendable
+ * Aggregatable
+ * Mappable
+ * Chainable
+ * Collapsable
+#+END_RIGHTCOL
+
+
+* Semigroup
+#+BEGIN_NOTES
+Полугруппа в общей алгебре — множество с заданной на нём ассоциативной бинарной операцией
+#+END_NOTES
+
+#+REVEAL: split
+$$
+(G, \cdot  : G \times  G \rightarrow  G)\\
+(x \cdot y) \cdot z = x \cdot (y \cdot z)
+$$
+
+#+REVEAL: split
+#+begin_src haskell
+class Semigroup a where
+  (<>) :: a -> a -> a
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+(x <> y) <> z = x <> (y <> z)
+#+end_src
+
+
+* TODO Monoid
+#+BEGIN_NOTES
+Моноид — полугруппа с нейтральным элементом.
+Более подробно, моноидом называется множество M, на котором задана бинарная
+ассоциативная операция, обычно именуемая умножением, и в котором существует
+такой элемент e, который удоволетворяет следующему равенству.
+
+Поскольку бинарная операция принимает два занчения одного типа и в качестве
+результата возвращает значение того же типа, то это позволяет нам легко строить
+композицию моноидов.
+Мы можем из двух моноидов получить один состовной, потом добавить к нему третий
+и так далее до бесконечности. Моноид как паттерн позволяет нам собрать что-то
+сложное из простых частей.
+
+Ассоциативность этой операции позволяет нам разделить применение этой операции
+по разным потокам или даже разным сервисам
+#+END_NOTES
+**
+$$
+(G, \cdot  : G \times  G \rightarrow  G)\\
+(x \cdot y) \cdot z = x \cdot (y \cdot z)\\
+e \cdot x = x \cdot e = x
+$$
+**
+#+begin_src haskell
+class Semigroup a => Monoid a where
+  mempty  :: a
+#+end_src
+
+
+* TODO Functor
+#+BEGIN_NOTES
+Функтор — особый тип отображений между категориями. Его можно понимать как
+отображение, сохраняющее структуру.
+#+END_NOTES
+
+* TODO Monad
