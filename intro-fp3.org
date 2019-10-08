@@ -153,46 +153,36 @@ factorial n = n * factorial (n - 1)
 
 * Semigroup
 
-#+REVEAL: split
 #+BEGIN_SRC java
-public static void main(String[] args) {
     Config configFromArgs = fromArgs(args);
-
     startApplication(configFromArgs);
-}
 
 
 #+END_SRC
 
 #+REVEAL: split
 #+BEGIN_SRC java
-public static void main(String[] args) {
     Config configFromArgs = fromArgs(args);
     Config configFromFile = fromFile("config.yml");
-
-    startApplication(configFromArgs);
-}
+    startApplication(???);
 
 #+END_SRC
 
 #+REVEAL: split
 #+BEGIN_SRC java
-public static void main(String[] args) {
     Config configFromArgs = fromArgs(args);
     Config configFromFile = fromFile("config.yml");
-
-    Config config = merge(configFromFile, configFromArgs);
+    Config config = combine(configFromFile, configFromArgs);
     startApplication(config);
-}
 #+END_SRC
 
 #+BEGIN_NOTES
-Мы можем написать функцию, которая применяя функцию merge сворачивает
+Мы можем написать функцию, которая применяя функцию combine сворачивает
 список конфигов из разных источников:
 #+END_NOTES
 #+REVEAL: split
 #+BEGIN_SRC java
-Config config = mergeAll(configFromServer,
+Config config = combineAll(configFromServer,
                          configFromFile,
                          configFromSystemEnv,
                          configFromArgs);
@@ -201,14 +191,15 @@ Config config = mergeAll(configFromServer,
 Нам даже не важно в каком порядке будут объединяться конфиги, пока сохраняется
 общая последовательность их объединения. В математике такое свойство операции
 называется ассоциативностью.
-Конфиг в примере выше можно заменить на получение и
-композицию метрик с разных сервисов или соединение логов с нескольких серверов.
-Объединяет их одно - функция композиции, со следующей сигнатурой:
+
+Конфиг в примере выше можно заменить на получение и композицию метрик с разных
+серверов или соединение логов с нескольких серверов. Объединяет их одно -
+функция композиции, со следующей сигнатурой:
 #+END_NOTES
 
 #+REVEAL: split
-#+BEGIN_SRC haskell
-a -> a -> a
+#+BEGIN_SRC java
+public <T> T function(T a, T b);
 #+END_SRC
 
 #+BEGIN_NOTES
@@ -217,7 +208,7 @@ a -> a -> a
 операцией называется полугруппой. Математики это определение записывают
 следующим образом:
 #+END_NOTES
-
+** Overview
 #+REVEAL: split
 $$
 (G, \cdot  : G \times  G \rightarrow  G)\\
@@ -413,36 +404,39 @@ mconcat :: [a] -> a
 
 * Functor
 #+BEGIN_NOTES
-Давайте поразмышляем над следущим кодом, в котором мы ищем клиента по имени, а
-потом получаем город, в котором он живет.
+Давайте поразмышляем над следущими тремя примерами кода.
 #+END_NOTES
 
 #+BEGIN_SRC java
 Customer customer = findCustomerByName(name);
-String city = customer.getAddress().getCity();
+String city = null;
+if (customer != null) {
+    city = customer.getAddress().getCity();
+}
 #+END_SRC
 
-#+BEGIN_NOTES
-У опытного Java программиста глядя на этот код наверняка возникнет вопрос, а что
-вернет функция findCustomerByName если мы не найдем клиента? Нет ли в этом коде
-NPE? Возвращать из функции null и надеяться, что вызывающий ее программист
-проверит результат наивно, то же самое с RuntimeException. Остается два
-варианта - использовать checked исключения, либо заставить проверять наличие
-значения через возвращаемый тип.
-#+END_NOTES
-
+#+attr_reveal: :frag (roll-in)
 #+BEGIN_SRC java
-Optional<Customer> customer = findCustomerByName(name);
-Optional<String> city = customer
-    .map(Customer::getAddress)
-    .map(Address:getCity);
+List<Customer> customers = findAllCustomers();
+List<String> cities = new ArrayList<String>();
+for (Customer customer : customers) {
+    String city = customer.getAddress().getCity();
+    cities.add(city);
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+Future<Customer> customer = findCustomerByName(name);
+String city = customer.get().getAddress().getCity();
 #+END_SRC
 
 #+BEGIN_NOTES
-По определению из математики функтор — особый тип отображений между категориями.
-Его можно понимать как отображение, сохраняющее структуру.
+У них гораздо больше общего чем может показаться на первый взгляд. Все эти
+примеры можно переписать с использованием паттерна Функтор.
 #+END_NOTES
 
+** Overview
 #+BEGIN_NOTES
 По определению из математики функтор — особый тип отображений между категориями.
 Его можно понимать как отображение, сохраняющее структуру.
@@ -467,11 +461,6 @@ interface Functor<A> {
 #+END_SRC
 
 #+BEGIN_NOTES
-Функтор не отвечает на вопрос как значение в него попадает и как его достать,
-все это детали реализации конкретных функторов. Единственный способ
-взаимодействия с этим значением - это цепочки трансформаций при помощи функции
-map.
-
 В Haskell функтор определен следующем образом:
 #+END_NOTES
 #+attr_reveal: :frag (roll-in)
@@ -524,23 +513,21 @@ opt.map(x -> String.valueOf(Math.round(x))) == opt.map(Math::round).map(String::
 #+END_SRC
 
 #+BEGIN_NOTES
-Смысл этих законов сводится к тому, что функция map не должна
-менять структуру контейнера. Она должна взять содержимое контейнера, применить к
-нему функцию, которую мы передали и завернуть результат в другой контейнер.
-Исходный функтор при этом должен остаться неизменным.
+Смысл этих законов сводится к тому, что функция map должна взять содержимое
+контейнера, и применить к нему функцию, которую мы передали, при этом не меняя
+структуры контейнера.
 #+END_NOTES
 ** Examles
 #+BEGIN_NOTES
-Функтор часто представляют как контейнер в котором содержится значение.
 Рассмотрим самые распространенные примеры функторов.
 #+END_NOTES
 
 *** Optional/Maybe
 #+BEGIN_NOTES
 Optional это тип данных, который может либо содержать значение, либо нет.
-Реализация функции map в этом случае довольно проста. В случае если Optional
-пуст - возвращаем пустой Optional. Если значение присутствует - применяем к
-нему переданную функцию и возвращаем новый экземпляр Optional с
+Реализация функции map в этом случае довольно проста. В случае если Optional не
+содержит значения - возвращаем пустой Optional. Если значение присутствует -
+применяем к нему переданную функцию и возвращаем новый экземпляр Optional с
 трансформированным значением.
 #+END_NOTES
 
@@ -652,27 +639,9 @@ Promise<String> city = customer
 По приведенным выше примерам функторов можно заметить на сколько это мощная
 абстаркция. Мы использовали один и тот же api для реализации цепочки отложенных
 вычислений, трансформации всех элементов списка и работы с неопределенным значением.
-
-В этом и есть сила паттернов ФП. Простые, но мощные
-абстракции, которые однозначно описываются в коде, со строго определенными
-законами и вытекающими из них характеристиками.
-
-В отличае от паттернов ООП, которые скорее похожи на сборник бабушкиных
-рецептов, где количество ингридиентов обычно определяется на глаз и по вкусу.
 #+END_NOTES
 
-
-#+BEGIN_SRC haskell
-data Either a b = Left a | Right b
-#+END_SRC
-
-#+BEGIN_SRC haskell
-instance Functor (Either a) where
-    fmap _ (Left x)   = Left x
-    fmap f (Right y)  = Right (f y)
-#+END_SRC
-
-#+REVEAL: split
+* TODO Monad
 #+BEGIN_NOTES
 Функтор очень мощная абстракция, но иногда ее мощности не хватает. Рассмотрим
 пример, когда функция трансформации уже сама возвращает функтор вместо
@@ -719,29 +688,12 @@ Optional<Optional<Manager>> manager = customer
 #+BEGIN_NOTES
 Можно явно проверять наличие значения в Optional, но такой вариант также не
 отличается изяществом.
+
+Функция map из определения функтора имеет следующую
+сигнатуру:
 #+END_NOTES
 
 #+REVEAL: split
-#+BEGIN_SRC java
-Optional<Manager> findLocalManager(String city) { ... }
-
-//...
-Optional<Customer> customer = findCustomerByName(name);
-Optional<String> city = customer
-    .map(Customer::getAddress)
-    .map(Address:getCity);
-
-Optional<Manager> manager = Optional.empty();
-if (city.isPresent()) {
-    manager = findLocalManager(city.get());
-}
-#+END_SRC
-
-#+REVEAL: split
-#+BEGIN_NOTES
-Функция map из определения функтора имеет следующую сигнатуру:
-#+END_NOTES
-
 #+BEGIN_SRC haskell
 (a -> b) -> f a -> f b
 #+END_SRC
@@ -758,9 +710,6 @@ if (city.isPresent()) {
 #+BEGIN_NOTES
 Функцию с такой сигнатурой мы найдем в классе типов монада
 #+END_NOTES
-
-* TODO Monad
-
 #+BEGIN_NOTES
 Монада над категорией {\displaystyle K}K — это моноид в моноидальной категории
 эндофункторов {\displaystyle \mathrm {End} (K)}{\mathrm {End}}(K).
@@ -937,7 +886,6 @@ instance Semigroup a => Monoid (Maybe a) where
 #+BEGIN_NOTES
 TODO может стоит привести пример монады writer или Validation с накопление ошибки
 #+END_NOTES
-
 
 * End
 #+BEGIN_NOTES
