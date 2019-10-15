@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Functional Programming Patterns</title>
+<meta name="author" content="(Артем)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js-3.8.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js-3.8.0/css/theme/moon.css" id="theme"/>
+
+<link rel="stylesheet" href="./css/local.css"/>
+
+<link rel="stylesheet" href="./css/ember.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js-3.8.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Functional Programming Patterns</h1>
+</section>
+
+
+<section>
+<section id="slide-org17fb1ab">
+<h2 id="org17fb1ab">Learn Haskell in 10 minutes</h2>
+<aside class="notes">
+<p>
+Haskell чистый функциональный язык программирования общего назначения c ленивой моделью вычисления.
+Ленивый - означает, что любые значения вычисляются только когда они нужны
+Чистый - означает, что все функции в хаскеле чистые, то есть не производят никаких сторонних эфектов
+</p>
+
+<p>
+Это кажется немного странным, как же без сторонних эффектов и изменения
+состояния написать хоть сколько нибудь осмысленную программу?
+</p>
+
+<p>
+Если проводить параллели с языком Java, то можно воспользоваться следующей интуицией:
+Представим, что у нас все переменные стали final, а структуры иммутабельными.
+Все операции связанные с вводом/выводом возвращают значения, обернутые в Future
+(причем такие Future, которые не запускаются при создании).
+То есть, например, мы обращаемся к БД и получаем не ResultSet, а
+`Future&lt;ResultSet&gt;`. И так с любой IO операцией.
+В дополнение к этому, мы не можем получить значение из этой Future, то есть у
+этой Future нет метода `.get()`
+Только сама jvm в `main` методе может получить значение из этой Future.
+И единственное что нам остается, пытаться композировать все эти Future в одну
+Future и возвращать ее в `main` методе, который уже ее запустит.
+</p>
+
+<p>
+При таких ограничениях получается что наша программа - это одно большое
+выражение, которое возвращает Future. А эта Future является композицией других Future.
+Таким образом мы достигаем чистоты функций так, как никаких сайд эфектов при
+вызове функций не происходит.
+</p>
+
+<p>
+Ленивость языка проявляется в том, что все вычисления производятся только тогда,
+когда их результат потребуется.
+</p>
+
+</aside>
+</section>
+<section id="slide-org30e545a">
+<h3 id="org30e545a">Lists</h3>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">++</span> <span style="color: #98be65;">", World!"</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">"Hello world!"</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">5</span>] <span style="color: #dcaeea;">==</span> [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>, <span style="color: #da8548; font-weight: bold;">5</span>]</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #98be65;">'A'</span><span style="color: #dcaeea;">..</span><span style="color: #98be65;">'F'</span>] <span style="color: #dcaeea;">==</span> <span style="color: #98be65;">"ABCDEF"</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span>]</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">3</span>] <span style="color: #dcaeea;">++</span> [<span style="color: #da8548; font-weight: bold;">4</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">6</span>] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[1, 2, 3, 4, 5, 6]</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #ECBE7B;">:</span> [<span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[1, 2, 3, 4]</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>[x<span style="color: #dcaeea;">*</span><span style="color: #da8548; font-weight: bold;">2</span> <span style="color: #dcaeea;">|</span> x <span style="color: #dcaeea;">&lt;-</span> [<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">5</span>]] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[2, 4, 6, 8, 10]</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>[(x, y) <span style="color: #dcaeea;">|</span> x <span style="color: #dcaeea;">&lt;-</span> [<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">3</span>], y <span style="color: #dcaeea;">&lt;-</span> [<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">3</span>], x <span style="color: #dcaeea;">+</span> y <span style="color: #dcaeea;">&gt;</span> <span style="color: #da8548; font-weight: bold;">4</span>] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[(2,3), (3,2), (3,3)]</span></code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org642dad8">
+<h3 id="org642dad8">Functions</h3>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">add</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
+<code><span style="color: #c678dd;">add</span> a b <span style="color: #dcaeea;">=</span> a <span style="color: #dcaeea;">+</span> b</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">add</span> <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #da8548; font-weight: bold;">3</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">4</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">addOne</span> <span style="color: #dcaeea;">=</span> add <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">:: Integer -&gt; Integer</span></code>
+<code></code>
+<code><span style="color: #c678dd;">addOne</span> <span style="color: #da8548; font-weight: bold;">4</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">5</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">main</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">IO</span> <span style="color: #ECBE7B;">()</span></code>
+<code><span style="color: #c678dd;">main</span> <span style="color: #dcaeea;">=</span> putStrLn <span style="color: #98be65;">"Hello, World!"</span></code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orga5733d7">
+<h3 id="orga5733d7">Controls</h3>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">factorial</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
+<code><span style="color: #c678dd;">factorial</span> n <span style="color: #dcaeea;">=</span> <span style="color: #51afef;">if</span> n <span style="color: #dcaeea;">&lt;</span> <span style="color: #da8548; font-weight: bold;">2</span></code>
+<code>              <span style="color: #51afef;">then</span> <span style="color: #da8548; font-weight: bold;">1</span></code>
+<code>              <span style="color: #51afef;">else</span> n <span style="color: #dcaeea;">*</span> factorial (n <span style="color: #dcaeea;">-</span> <span style="color: #da8548; font-weight: bold;">1</span>)</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">factorial</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
+<code><span style="color: #c678dd;">factorial</span> <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #dcaeea;">=</span> <span style="color: #da8548; font-weight: bold;">1</span></code>
+<code><span style="color: #c678dd;">factorial</span> n <span style="color: #dcaeea;">=</span> n <span style="color: #dcaeea;">*</span> factorial (n <span style="color: #dcaeea;">-</span> <span style="color: #da8548; font-weight: bold;">1</span>)</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org8102622">
+<h3 id="org8102622"><span class="todo TODO">TODO</span> Data</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb61bea8">
+<h2 id="orgb61bea8">Patterns</h2>
+<aside class="notes">
+<p>
+Функциональное программирование часто критикуют за использование математического
+жаргона. Термины вроде зигохистоморфный препроморфизм конечно не помогают
+продавать ФП. Названия же паттернов ООП более привычны для нас &ldquo;Мост&rdquo;, &ldquo;Фасад&rdquo;,
+&ldquo;Адаптер&rdquo;, но в тоже время эти знакомые названия не очень то помогают в
+понимании реализации паттернов.
+</p>
+
+<p>
+В ФП паттерны имеют под собой математическую основу со своими законами, в ООП же
+любой паттерн можно реализовать множеством разных способов и это не будет ошибкой.
+</p>
+
+</aside>
+
+<div class="LEFTCOL">
+<ul>
+<li>Semigroup</li>
+<li>Monoid</li>
+<li>Functor</li>
+<li>Monad</li>
+<li>Catamorphism</li>
+
+</ul>
+
+</div>
+
+<div class="RIGHTCOL">
+<ul>
+<li class="fragment roll-in">Appendable</li>
+<li class="fragment roll-in">Aggregatable</li>
+<li class="fragment roll-in">Mappable</li>
+<li class="fragment roll-in">Chainable</li>
+<li class="fragment roll-in">Collapsable</li>
+
+</ul>
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org7605ec3">
+<h2 id="org7605ec3">Semigroup</h2>
+</section>
+<section id="slide-org7605ec3-split">
+<aside class="notes">
+<p>
+Паттерн проектирования можно определить как часто встречающееся решение
+определенной проблемы при проектировании архитектуры программ. Давайте
+рассмотрим код, в котором мы запускаем приложение с конфигурациями полученными из
+разных источников, и попробуем выделить в нем паттерн.
+</p>
+
+<p>
+Для начала определим первый источник конфигурации - аргументы запуска приложения:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
+<code>    startApplication<span style="color: #51afef;">(</span>configFromArgs<span style="color: #51afef;">)</span>;</code>
+<code></code>
+<code></code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+Теперь добавим возможность конфигурирования приложения через файл. Что теперь мы
+передадим в функцию startApplicaton?
+</p>
+
+</aside>
+</section>
+<section id="slide-org7605ec3-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
+<code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromFile</span> = fromFile<span style="color: #51afef;">(</span><span style="color: #98be65;">"config.yml"</span><span style="color: #51afef;">)</span>;</code>
+<code>    startApplication<span style="color: #51afef;">(</span>???<span style="color: #51afef;">)</span>;</code>
+<code></code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+Если мы не хотим менять сигнатуру функции startApplication, то решением может
+стать некая функция combine, которая соединяет два конфига из разных источников
+в один объект.
+</p>
+
+</aside>
+</section>
+<section id="slide-org7605ec3-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
+<code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromFile</span> = fromFile<span style="color: #51afef;">(</span><span style="color: #98be65;">"config.yml"</span><span style="color: #51afef;">)</span>;</code>
+<code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">config</span> = combine<span style="color: #51afef;">(</span>configFromFile, configFromArgs<span style="color: #51afef;">)</span>;</code>
+<code>    startApplication<span style="color: #51afef;">(</span>config<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+Если источников конфигурации станет больше двух, то мы с легкостью можем написать
+функцию, которая применяя функцию combine сворачивает список конфигов из разных
+источников:
+</p>
+
+</aside>
+</section>
+<section id="slide-org7605ec3-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">config</span> = combineAll<span style="color: #51afef;">(</span>configFromServer,</code>
+<code>                         configFromFile,</code>
+<code>                         configFromSystemEnv,</code>
+<code>                         configFromArgs<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+Нам даже не важно в каком порядке будут объединяться конфиги, пока сохраняется
+общая последовательность их объединения. Мы можем сначала объединить
+configFromSystemEnv и configFromArgs, потом configFromServer и configFromFile, и
+затем объединить результаты предыдущих объединений. В математике такое свойство
+операции называется ассоциативностью.
+</p>
+
+<p>
+Конфиг в примере выше можно заменить на получение и композицию метрик с разных
+серверов или соединение логов с нескольких сервисов. Объединяет их одно -
+функция композиции, со следующей сигнатурой:
+</p>
+
+</aside>
+
+</section>
+<section id="slide-org7605ec3-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">apply</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">b</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Функция принимает два аргумента одного типа и возвращает результат того же типа
+что и аргументы. В общей алгебре множество с заданной на нем ассоциативной бинарной
+операцией называется полугруппой. Математики это определение записывают
+следующим образом:
+</p>
+
+</aside>
+</section>
+<section id="slide-orgb5b192b">
+<h3 id="orgb5b192b">Overview</h3>
+</section>
+<section id="slide-orgb5b192b-split">
+<p>
+\[
+(G, \cdot  : G \times  G \rightarrow  G)\\
+(x \cdot y) \cdot z = x \cdot (y \cdot z)
+\]
+</p>
+
+</section>
+<section id="slide-orgb5b192b-split">
+<aside class="notes">
+<p>
+Теперь давайте попробуем представить полугруппу в виде Java интерфейса:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #ECBE7B;">A</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">A</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">A</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+И тоже самое в Haskell:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #51afef;">where</span></code>
+<code>  (<span style="color: #dcaeea;">&lt;&gt;</span>) <span style="color: #dcaeea;">::</span> a <span style="color: #dcaeea;">-&gt;</span> a <span style="color: #dcaeea;">-&gt;</span> a</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org22625e3">
+<h3 id="org22625e3">Examples</h3>
+</section>
+<section id="slide-org22625e3-split">
+<aside class="notes">
+<p>
+Приведем несколько примеров полугрупп.
+Первый пример: строки и операция конкатенации.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">static</span> <span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">StringSemigroup</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">String</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">x</span>, <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">y</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> x + y;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">StringSemigroup</span> <span style="color: #dcaeea;">ss</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">StringSemigroup</span><span style="color: #51afef;">()</span>;</code>
+<code>ss.apply<span style="color: #51afef;">(</span><span style="color: #98be65;">"Hello"</span>, ss.apply<span style="color: #c678dd;">(</span><span style="color: #98be65;">" "</span>, <span style="color: #98be65;">"World"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org22625e3-split">
+<aside class="notes">
+<p>
+Тоже самое на Haskell
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Semigroup</span> <span style="color: #ECBE7B;">String</span> <span style="color: #51afef;">where</span></code>
+<code>  (<span style="color: #dcaeea;">&lt;&gt;</span>) <span style="color: #dcaeea;">=</span> (<span style="color: #dcaeea;">++</span>)</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">" "</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">"World"</span></code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org22625e3-split">
+<aside class="notes">
+<p>
+Другой пример полугруппы - множество целых чисел и определенная на них операция
+минимума:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">MinIntSemigroup</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> a &lt; <span style="color: #ECBE7B;">b</span> ? a : b;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">MinIntSemigroup</span> <span style="color: #dcaeea;">ms</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">MinIntSemigroup</span><span style="color: #51afef;">()</span>;</code>
+<code>ms.apply<span style="color: #51afef;">(</span><span style="color: #da8548; font-weight: bold;">100</span>, ms.apply<span style="color: #c678dd;">(</span><span style="color: #da8548; font-weight: bold;">42</span>, <span style="color: #da8548; font-weight: bold;">512</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org22625e3-split">
+<aside class="notes">
+<p>
+Довольно легко написать функцию свертки на списке полугрупп. Со
+следующей сигнатурой:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">sconcat</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Semigroup</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">semigroup</span>, <span style="color: #ECBE7B;">List</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">list</span><span style="color: #51afef;">)</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #c678dd;">sconcat</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #dcaeea;">=&gt;</span> [a] <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Maybe</span> a</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Сразу бросается в глаза то, что функция sconcat вынуждена возвращать тип
+Optional, так как мы можем передать в нее пустой список. С полугруппой
+MinIntSemigroup это оправдано, так как не понятно, что нам возвращать в случае
+пустого списка. Но, например, для полугруппы StringSemigroup мы бы могли вернуть
+пустую строку, а в случае с конфигами - пустой конфиг без параметров. Для этого
+нам нужно добавить к бинарной операции еще некий нейтральный элемент и таким
+образом мы получаем моноид.
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-org95ddec5">
+<h2 id="org95ddec5">Monoid</h2>
+<div class="outline-text-2" id="text-org95ddec5">
+</div>
+</section>
+<section id="slide-orgb2e7fce">
+<h3 id="orgb2e7fce">Overview</h3>
+<aside class="notes">
+<p>
+Моноидом называется множество M, на котором задана бинарная ассоциативная
+операция, и в котором существует нейтральный элемент e, удовлетворяющий
+следующему равенству:
+</p>
+
+</aside>
+
+<p>
+\[
+(G, \cdot  : G \times  G \rightarrow  G)\\
+(x \cdot y) \cdot z = x \cdot (y \cdot z)\\
+e \cdot x = x \cdot e = x
+\]
+</p>
+
+</section>
+<section id="slide-orgb2e7fce-split">
+<aside class="notes">
+<p>
+Выразим это в виде Java интерфейса, расширив интерфейс полугруппы, так как по
+определению любой моноид также является и полугруппой:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #ECBE7B;">A</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+И в виде класса типов в Haskell:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monoid</span> a <span style="color: #51afef;">where</span></code>
+<code>  mempty  <span style="color: #dcaeea;">::</span> a</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org2798727">
+<h3 id="org2798727">Examples</h3>
+<aside class="notes">
+<p>
+Приведем примеры моноидов:
+</p>
+
+</aside>
+</section>
+<section id="slide-org2798727-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">StringMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">String</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #98be65;">""</span>; <span style="color: #c678dd;">}</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">String</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> a + b;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">IntSumMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #da8548; font-weight: bold;">0</span>; <span style="color: #c678dd;">}</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> a + b;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">IntProdMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #da8548; font-weight: bold;">1</span>; <span style="color: #c678dd;">}</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> a * b;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+И благодаря нейтральному элементу мы можем реализовать функцию свертки без
+использования типа Optional:
+</p>
+
+</aside>
+</section>
+<section id="slide-org2798727-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">mconcat</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Monoid</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">monoid</span>, <span style="color: #ECBE7B;">List</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">list</span><span style="color: #51afef;">)</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #c678dd;">mconcat</span> <span style="color: #dcaeea;">::</span> [a] <span style="color: #dcaeea;">-&gt;</span> a</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Поскольку бинарная операция принимает два занчения одного типа и в качестве
+результата возвращает значение того же типа, то это позволяет нам легко строить
+композицию моноидов.
+Мы можем из двух моноидов получить один составной, потом добавить к нему третий
+и так далее. И в результате мы все равно получим тот же самый моноид, готовый к
+дальнейшей композиции.
+</p>
+
+<p>
+Моноид как паттерн позволяет нам собрать что-то сложное из простых частей не
+вводя дополнительных концепций. А ассоциативность этой операции позволяет нам
+разделить применение этой операции по разным потокам или даже разным сервисам.
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc0b2ec9">
+<h2 id="orgc0b2ec9">Functor</h2>
+</section>
+<section id="slide-orgc0b2ec9-split">
+<aside class="notes">
+<p>
+Давайте поразмышляем над следующими тремя примерами кода.
+TODO: подобрать примеры получше
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
+<code><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = <span style="color: #a9a1e1;">null</span>;</code>
+<code><span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span>customer != <span style="color: #a9a1e1;">null</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span></code>
+<code>    city = customer.getAddress<span style="color: #c678dd;">()</span>.getCity<span style="color: #c678dd;">()</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">List</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customers</span> = findAllCustomers<span style="color: #51afef;">()</span>;</code>
+<code><span style="color: #ECBE7B;">List</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">cities</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">ArrayList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;()</span>;</code>
+<code><span style="color: #51afef;">for</span> <span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">customer</span> : customers<span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = customer.getAddress<span style="color: #c678dd;">()</span>.getCity<span style="color: #c678dd;">()</span>;</code>
+<code>    cities.add<span style="color: #c678dd;">(</span>city<span style="color: #c678dd;">)</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Future</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
+<code><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = customer.get<span style="color: #51afef;">()</span>.getAddress<span style="color: #51afef;">()</span>.getCity<span style="color: #51afef;">()</span>;</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+У них гораздо больше общего чем может показаться на первый взгляд. Все эти
+примеры можно переписать с использованием паттерна Функтор.
+</p>
+
+</aside>
+
+</section>
+<section id="slide-org83b3454">
+<h3 id="org83b3454">Overview</h3>
+</section>
+<section id="slide-org83b3454-split">
+<aside class="notes">
+<p>
+По определению из математики функтор — особый тип отображений между категориями.
+Его можно понимать как отображение, сохраняющее структуру.
+</p>
+
+<p>
+В Java функтором называют структуру данных, которая инкапсулирует некоторое
+значение и имеет метод map со следующей сигнатурой для трансформации этого
+значения:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> map<span style="color: #c678dd;">(</span>Function&lt;<span style="color: #ECBE7B;">A</span>, B&gt; fn<span style="color: #c678dd;">)</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+В Haskell функтор определен следующем образом:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Functor</span> f <span style="color: #51afef;">where</span></code>
+<code>  fmap <span style="color: #dcaeea;">::</span> (a <span style="color: #dcaeea;">-&gt;</span> b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+Это можно прочитать следующим образом:
+Тип f принадлежит к классу типов функтор, если для него определена функция fmap,
+у которой первый параметр - это функция, принимающая значения типа a и
+возвращающая значение типа b, второй параметр - это f параметризованный типом a
+и результат - f, параметризованный типом b.
+</p>
+
+<p>
+Тип f b - это тип высшего порядка. В Java, это было бы что-то
+вроде: F&lt;B&gt;, то есть любой контейнер, который содержит тип B. Таким образом мы
+бы получили возможность абстрагироваться не только от типа внутри контейнеров,
+но и от типов самих контейнеров. Но к сожалению в Java так сделать нельзя (но
+можно сделать в Scala)
+</p>
+
+</aside>
+
+</section>
+<section id="slide-org3d01144">
+<h3 id="org3d01144">Laws</h3>
+<aside class="notes">
+<p>
+Но этого недостаточно, чтобы определить функтор. Как и в случае с моноидом
+функтор должен удовлетворять некоторым законам, которые мы не можем выразить в
+языках вроде Java или Haskell. Вот эти законы:
+</p>
+
+</aside>
+
+<div>
+\begin{multline}
+\shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C
+\shoveleft F(g \circ f) = F(g) \circ F(f)
+\shoveleft F(\text{id}_x)=\text{id}_{F(x)}
+\end{multline}
+
+</div>
+
+</section>
+<section id="slide-org3d01144-split">
+<aside class="notes">
+<p>
+Запишем их в виде кода.
+</p>
+<ol>
+<li>Вызов функции map с функцией identity должен вернуть тот же самый функтор:</li>
+
+</ol>
+
+</aside>
+<p>
+Identity Law
+</p>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>functor.map<span style="color: #51afef;">(</span>x -&gt; x<span style="color: #51afef;">)</span> == functor</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<ol>
+<li>Закон композиции:</li>
+
+</ol>
+
+</aside>
+<p class="fragment (roll-in)">
+Composition Law
+</p>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>functor.map<span style="color: #51afef;">(</span>x -&gt; f<span style="color: #c678dd;">(</span>g<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> == functor.map<span style="color: #51afef;">(</span>g<span style="color: #51afef;">)</span>.map<span style="color: #51afef;">(</span>f<span style="color: #51afef;">)</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Смысл этих законов сводится к тому, что функция map должна взять содержимое
+контейнера, и применить к нему функцию, которую мы передали, при этом не меняя
+структуры контейнера.
+</p>
+
+</aside>
+</section>
+<section id="slide-org3f54a76">
+<h3 id="org3f54a76">Examles</h3>
+<aside class="notes">
+<p>
+Рассмотрим самые распространенные примеры функторов.
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgfde953e">
+<h4 id="orgfde953e">Optional</h4>
+<aside class="notes">
+<p>
+Optional это тип данных, который может либо содержать значение, либо нет.
+Реализация функции map в этом случае довольно проста. В случае если Optional не
+содержит значения - возвращаем пустой Optional. Если значение присутствует -
+применяем к нему переданную функцию и возвращаем новый экземпляр Optional с
+трансформированным значением.
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span>;</code>
+<code></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #c678dd;">Optional</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">this</span>.value = value;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #a9a1e1;">@Override</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>value == <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
+<code>            <span style="color: #51afef;">return</span> empty<span style="color: #98be65;">()</span>;</code>
+<code>        <span style="color: #51afef;">else</span></code>
+<code>            <span style="color: #51afef;">return</span> of<span style="color: #98be65;">(</span>f.apply<span style="color: #51afef;">(</span>value<span style="color: #51afef;">)</span><span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">of</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #98be65;">&gt;(</span>a<span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #98be65;">&gt;(</span><span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
+<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = customer</code>
+<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgfde953e-split">
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #ECBE7B;">Maybe</span> a <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Just</span> a</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Functor</span> <span style="color: #ECBE7B;">Maybe</span> <span style="color: #51afef;">where</span></code>
+<code>    fmap <span style="color: #51afef;">_</span> <span style="color: #ECBE7B;">Nothing</span>   <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span></code>
+<code>    fmap f (<span style="color: #ECBE7B;">Just</span> a)  <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Just</span> (f a)</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org89ec6cf">
+<h4 id="org89ec6cf">List</h4>
+<aside class="notes">
+<p>
+Функтор не обязан содержать только одно значение, например список также является
+функтором. Сигнатура функции map остается прежней, но ее поведение меняется. В
+случае списка map применяет функцию трансформации к каждому элементу, возвращая
+новый список.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">FList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">ArrayList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code></code>
+<code>    <span style="color: #a9a1e1;">@Override</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">FList</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #ECBE7B;">FList</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">result</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">FList</span><span style="color: #98be65;">&lt;&gt;()</span>;</code>
+<code>        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i &lt; <span style="color: #ECBE7B;">size</span><span style="color: #51afef;">()</span>; i++<span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span></code>
+<code>            <span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">newElement</span> = f.apply<span style="color: #51afef;">(</span>get<span style="color: #c678dd;">(</span>i<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<code>            result.add<span style="color: #51afef;">(</span>newElement<span style="color: #51afef;">)</span>;</code>
+<code>        <span style="color: #98be65;">}</span></code>
+<code>        <span style="color: #51afef;">return</span> result;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">FList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customers</span> = getAllCustomers<span style="color: #51afef;">()</span>;</code>
+<code><span style="color: #ECBE7B;">FList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">cities</span> = customers</code>
+<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgb05cc4f">
+<h4 id="orgb05cc4f">Promise</h4>
+<aside class="notes">
+<p>
+Определение функтора не накладывает никаких ограничений ни на структуру
+контейнера, ни на то как значение в него попадает или как его достать от туда. Функтор
+вообще может не содержать никакого значения в данный момент, а получать его
+позже. Например, функтор можно имплементировать для класса Future&lt;T&gt;. При
+создании объекта Future&lt;T&gt; в нем нет никакого значения, оно там появится когда
+завершиться какое-то действие. Выполнится http запрос к внешнему
+сервису или чтение из БД. Но это не мешает нам применять
+трансформации к этому еще не полученному
+значению через функцию map, так же как мы делали это с List и Optional. При этом
+функция map не блокирует поток, ожидая появления значения. Таким образом мы можем
+строить цепочки неблокирующих вычислений.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> ... <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = customerServiceApi.getCustomerById<span style="color: #51afef;">(</span>id<span style="color: #51afef;">)</span>;</code>
+<code><span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = customer</code>
+<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+По приведенным выше примерам функторов можно заметить на сколько это мощная
+абстракция. Мы использовали один и тот же интерфейс для реализации цепочки отложенных
+вычислений, трансформации всех элементов списка и работы с неопределенным значением.
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbee58b8">
+<h2 id="orgbee58b8"><span class="todo TODO">TODO</span> Monad</h2>
+<aside class="notes">
+<p>
+Функтор удобный и часто используемый паттерн, но в некоторых ситуациях он нам не
+подходит. Например, когда функция трансформации сама возвращает функтор вместо
+обычного значения.
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #5B6268;">//</span><span style="color: #5B6268;">...</span></code>
+<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
+<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">manager</span> = customer</code>
+<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>city -&gt; findLocalManager<span style="color: #c678dd;">(</span>city<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Если мы воспользуемся функцией map, то в результате получим тип
+Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не понятно что делать.
+</p>
+
+<p>
+Функция map из определения функтора имеет следующую сигнатуру:
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgbee58b8-split">
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code>(a <span style="color: #dcaeea;">-&gt;</span> b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Нам же нужна функция со следующей сигнатурой:
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code>(a <span style="color: #dcaeea;">-&gt;</span> f b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+И ее мы найдем в классе типов монада
+</p>
+
+</aside>
+</section>
+<section id="slide-org996392d">
+<h3 id="org996392d">Overview</h3>
+<aside class="notes">
+<p>
+Монада — это общий способ описать идею последовательных вычислений, которые
+можно соединять вместе так, чтобы от результата предыдущего вычисления зависело
+следующее.
+</p>
+
+<p>
+С точки зрения программирования монада это тип данных с одним параметром,
+обладающим двумя функциями: Функцией конструктором (unit/pure/return), которая
+оборачивает некоторое значение в монаду. И функцией связывания (flatMap/bind).
+Как и рассмотренные ранее паттерны монада должна удовлетворять некоторым
+законам, знакомство с которыми мы оставим за рамками этой презентации.
+</p>
+
+<p>
+Интерфейс Monad может выглядеть на Java следующим образом:
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">M</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #c678dd;">&lt;</span>?, ?<span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #ECBE7B;">M</span> <span style="color: #c678dd;">flatMap</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">M</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgd976e88">
+<h3 id="orgd976e88">Examples</h3>
+<div class="outline-text-3" id="text-orgd976e88">
+</div>
+</section>
+<section id="slide-orgf18b938">
+<h4 id="orgf18b938">Optional</h4>
+<aside class="notes">
+<p>
+Попробуем написать имплиментацию этого интерфейса для Optional
+</p>
+
+</aside>
+
+<div class="LARGE_SRC">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span>;</code>
+<code></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #c678dd;">Optional</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">this</span>.value = value;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">of</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;&gt;(</span>a<span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;&gt;(</span><span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #a9a1e1;">@Override</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">B</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">fn</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>value == <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
+<code>            <span style="color: #51afef;">return</span> empty<span style="color: #98be65;">()</span>;</code>
+<code>        <span style="color: #51afef;">else</span></code>
+<code>            <span style="color: #51afef;">return</span> of<span style="color: #98be65;">(</span>fn.apply<span style="color: #51afef;">(</span>value<span style="color: #51afef;">)</span><span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #a9a1e1;">@Override</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">flatMap</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">fn</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>value == <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
+<code>            <span style="color: #51afef;">return</span> empty<span style="color: #98be65;">()</span>;</code>
+<code>        <span style="color: #51afef;">else</span></code>
+<code>            <span style="color: #51afef;">return</span> fn.apply<span style="color: #98be65;">(</span>value<span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+</div>
+
+<aside class="notes">
+<p>
+Вернемся к нашему примеру, где мы хотели найти менеджера для клиента. Теперь он
+будет выглядеть так:
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgf18b938-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #5B6268;">//</span><span style="color: #5B6268;">...</span></code>
+<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
+<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">manager</span> = customer</code>
+<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span></code>
+<code>    .flatMap<span style="color: #51afef;">(</span><span style="color: #51afef;">this</span>::findLocalManager<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+И если потребуется, то можно с легкостью продолжить эту цепочку. Например, таким
+образом мы можем безопасно добраться до глубоко вложенных полей в структурах:
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgf18b938-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">PersonalData</span> <span style="color: #dcaeea;">personalData</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">PersonalData</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Contact</span> <span style="color: #dcaeea;">contact</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Contact</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Address</span> <span style="color: #dcaeea;">address</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Address</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Во первых понять по этой структуре какие поля обязательные, а какие нет -
+невозможно, так что будем считать что null может быть в любом поле и теперь
+хотим у человека получить город проживания. Для этого нам придется написать
+что-то вроде:
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = <span style="color: #a9a1e1;">null</span>;</code>
+<code><span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span>person.getPersonalData<span style="color: #c678dd;">()</span> != <span style="color: #a9a1e1;">null</span></code>
+<code>    &amp;&amp; person.getPersonalData<span style="color: #c678dd;">()</span>.getContact<span style="color: #c678dd;">()</span> != <span style="color: #a9a1e1;">null</span></code>
+<code>    &amp;&amp; person.getPersonalData<span style="color: #c678dd;">()</span>.getContact<span style="color: #c678dd;">()</span>.getAddress<span style="color: #c678dd;">()</span> != <span style="color: #a9a1e1;">null</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span></code>
+<code>    city = person.getPersonalData<span style="color: #c678dd;">()</span>.getContact<span style="color: #c678dd;">()</span>.getAddress<span style="color: #c678dd;">()</span>.getCity<span style="color: #c678dd;">()</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Выглядит этот код хоть и привычно, но во-первых в нем можно допустить ошибку,
+во-вторых он наполнен визуальным мусором, который мешает понимать его суть.
+Давайте перепишем этот пример с использованием Optional:
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgf18b938-split">
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">PersonalData</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">personalData</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">PersonalData</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Contact</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">contact</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Contact</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Address</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">address</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Address</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span>;</code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = person.getPersonalData<span style="color: #51afef;">()</span></code>
+<code>    .flatMap<span style="color: #51afef;">(</span>PersonalData::getContact<span style="color: #51afef;">)</span></code>
+<code>    .flatMap<span style="color: #51afef;">(</span>Contact::getAddress<span style="color: #51afef;">)</span></code>
+<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+На мой взгляд теперь из кода явно видно что мы хотим сделать, компилятор
+защищает нас от ошибок а типы стали частью документации к коду.
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orge04ff8c">
+<h4 id="orge04ff8c">Promise</h4>
+<aside class="notes">
+<p>
+Давайте посмотрим на функции ниже и подумаем как нам сделать следующее: получить
+клиента по имени, потом по его адресу найти менеджера и запланировать между ними
+встречу. И сделать все это асинхронно, без блокировок.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getCustomerByName</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">name</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Address</span> <span style="color: #dcaeea;">customerAddress</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">scheduleMeeting</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Manager</span> <span style="color: #dcaeea;">manager</span>, <span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">customer</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+На самом деле для этого нам не нужно ничего знать кроме того что Promise также
+является монадой. Сделать то что мы хотим можно следующим образом:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">meeting</span> = getCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span></code>
+<code>    .flatMap<span style="color: #51afef;">(</span>customer -&gt;</code>
+<code>             getLocalManager<span style="color: #c678dd;">(</span>customer.getAddress<span style="color: #98be65;">()</span><span style="color: #c678dd;">)</span></code>
+<code>                 .flatMap<span style="color: #c678dd;">(</span>manager -&gt;</code>
+<code>                          scheduleMeeting<span style="color: #98be65;">(</span>manager, customer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Таким образом мы можем строить цепочки связанных асинхронных вызовов не
+используя коллбеки или какие-то дополнительные инструменты синхронизации.
+</p>
+
+</aside>
+</section>
+<section id="slide-orgd1a660a">
+<h4 id="orgd1a660a">For comprehension</h4>
+<aside class="notes">
+<p>
+В Haskell и Scala монады настолько распространены, что существует специальный
+синтаксис для композиции монадических функций. Благодаря ему можно переписать
+этот код:
+</p>
+
+</aside>
+</section>
+<section id="slide-orgd1a660a-split">
+<div class="org-src-container">
+
+<pre  class="src src-scala"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> getCustomerByName(name)</code>
+<code>  .flatMap(customer <span style="color: #51afef;">=&gt;</span></code>
+<code>      getLocalManager(customer.address)</code>
+<code>        .flatMap(manager <span style="color: #51afef;">=&gt;</span></code>
+<code>          scheduleMeeting(manager, customer))</code>
+<code>  )</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Вот так:
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> <span style="color: #51afef;">for</span> {</code>
+<code>  customer <span style="color: #51afef;">&lt;-</span> getCustomerByName(name)</code>
+<code>  manager <span style="color: #51afef;">&lt;-</span> getLocalManager(customer.address)</code>
+<code>  meeting <span style="color: #51afef;">&lt;-</span> scheduleMeeting(manager, customer)</code>
+<code>} <span style="color: #51afef;">yield</span> meeting</code>
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+В Scala такая форма записи называется for-comprehension
+</p>
+
+</aside>
+</section>
+<section id="slide-orgd1a660a-split">
+
+<aside class="notes">
+<p>
+Either?
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-org4c7a0b4">
+<h2 id="org4c7a0b4">End</h2>
+<aside class="notes">
+<p>
+Абстракции крайне важны. В принципе все чем мы занимаемся в программировании -
+это проектирование абстракций и взаимодействий между ними. К признакам хороших
+абстракций можно отнести возможность комбинировать их друг с другом и
+универсальность, то есть количество разных вещей, которые можно выразить через
+абстракцию.
+</p>
+
+<p>
+У математиков очень большой опыт в построении и использовании абстракций. И
+поскольку язык Хаскелл был разработан математиками, то нет ничего удивительного
+что в нем используются знакомые математикам и проверенные временем абстракции. И
+дальше они уже потихоньку протекают в мейнстрим языки программирования.
+</p>
+
+
+
+
+
+
+<p>
+Это позволяет рассуждать о коде,  в чем и должны помогать паттерны. Только в отличие от ооп и 3ех разновидностей стнглтонов под этими паттернами есть матиматическое основание. И строгие поавила что является моноидом, а что нет. При этом эти правила хоть и не требуются еа уровне языка, зотя бы можно проверитб юнит тестом.
+</p>
+
+<p>
+Слыша слово моноид я понимаю что это что-то что я могу заредюсить и при этом сделать это параллельно
+Свойство ассоциативности кажется таким не существенным, но оно очень мощное.
+</p>
+
+<p>
+Семигруппа - значит можем параллелить или асинхронно обробатовать батчами
+Моноид - можем делать фолд A functor is a way to apply a function over or around
+some structure that we don’t want to alter. That is, we want to apply the
+function to the value that is “inside” some structure and leave the structure
+alone.
+</p>
+
+<p>
+То же самое с декомпозицией большой задачи. Мой опыт показывает, что чем меньше
+контекста нужно держать в голове для осознания одной строчки кода, тем проще её
+понять. В Haskell все направлено на то, чтобы этот контекст сделать как можно
+меньше, то есть, чтобы не думать. Чистые функции — чтобы не думать о посторонних
+эффектах. Иммутабельность — чтобы не думать, где переменная могла измениться.
+Типы — чтобы не думать, какую экзотику могут скормить в нашу функцию.
+Полиморфизм — чтобы вообще не думать о конкретных значениях, а думать о
+действиях. Разделение контекста и значений на уровне типов — чтобы не думать,
+какую часть внешнего мира изменит вызов этой функции. Алгебраические типы данных
+— чтобы не думать обо всех случаях и сценариях сразу. Ряд можно продолжать долго
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf55f50c">
+<h2 id="orgf55f50c">Trash</h2>
+</section>
+<section id="slide-orgf55f50c-split">
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Functor</span> m <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monad</span> m <span style="color: #51afef;">where</span></code>
+<code>    (<span style="color: #dcaeea;">&gt;&gt;=</span>)   <span style="color: #dcaeea;">::</span> m a <span style="color: #dcaeea;">-&gt;</span> (a <span style="color: #dcaeea;">-&gt;</span> m b) <span style="color: #dcaeea;">-&gt;</span> m b</code>
+<code></code>
+<code>    pure    <span style="color: #dcaeea;">::</span> a <span style="color: #dcaeea;">-&gt;</span> m a</code>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Monad</span> <span style="color: #ECBE7B;">Maybe</span> <span style="color: #51afef;">where</span></code>
+<code>    (<span style="color: #ECBE7B;">Just</span> x) <span style="color: #dcaeea;">&gt;&gt;=</span> k      <span style="color: #dcaeea;">=</span> k x</code>
+<code>    <span style="color: #ECBE7B;">Nothing</span>  <span style="color: #dcaeea;">&gt;&gt;=</span> <span style="color: #51afef;">_</span>      <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span></code>
+<code></code>
+<code>    pure x <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Just</span> x</code>
+</code></pre>
+</div>
+
+
+<div>
+\begin{multline}
+\shoveleft F : C \to D \\
+\shoveleft X \in C \text{ assign an object } F(X) \in D \\
+\shoveleft f : X \rightarrow Y \in C
+\text{ assign an arrow } F(f) : F(X) \rightarrow F(Y) \in D
+\end{multline}
+
+</div>
+
+
+<div class="fragment (roll-in)">
+\begin{multline}
+\shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C \\
+F(g \circ f) = F(g) \circ F(f) \\ \\
+\shoveleft F(\text{id}_x)=\text{id}_{F(x)}
+\end{multline}
+
+</div>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js-3.8.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js-3.8.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

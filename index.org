@@ -1,0 +1,1005 @@
+#+REVEAL_EXTRA_CSS: ./css/local.css
+#+REVEAL_EXTRA_CSS: ./css/ember.css
+#+REVEAL_TRANS: fade
+#+REVEAL_PLUGINS: (notes)
+#+REVEAL_ROOT: ./reveal.js-3.8.0
+#+REVEAL_DEFAULT_FRAG_STYLE: roll-in
+#+OPTIONS: toc:nil num:nil reveal_slide_number:nil author:nil date:nil timestamp:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+TITLE: Functional Programming Patterns
+
+
+* Learn Haskell in 10 minutes
+#+BEGIN_NOTES
+Haskell чистый функциональный язык программирования общего назначения c ленивой моделью вычисления.
+Ленивый - означает, что любые значения вычисляются только когда они нужны
+Чистый - означает, что все функции в хаскеле чистые, то есть не производят никаких сторонних эфектов
+
+Это кажется немного странным, как же без сторонних эффектов и изменения
+состояния написать хоть сколько нибудь осмысленную программу?
+
+Если проводить параллели с языком Java, то можно воспользоваться следующей интуицией:
+Представим, что у нас все переменные стали final, а структуры иммутабельными.
+Все операции связанные с вводом/выводом возвращают значения, обернутые в Future
+(причем такие Future, которые не запускаются при создании).
+То есть, например, мы обращаемся к БД и получаем не ResultSet, а
+`Future<ResultSet>`. И так с любой IO операцией.
+В дополнение к этому, мы не можем получить значение из этой Future, то есть у
+этой Future нет метода `.get()`
+Только сама jvm в `main` методе может получить значение из этой Future.
+И единственное что нам остается, пытаться композировать все эти Future в одну
+Future и возвращать ее в `main` методе, который уже ее запустит.
+
+При таких ограничениях получается что наша программа - это одно большое
+выражение, которое возвращает Future. А эта Future является композицией других Future.
+Таким образом мы достигаем чистоты функций так, как никаких сайд эфектов при
+вызове функций не происходит.
+
+Ленивость языка проявляется в том, что все вычисления производятся только тогда,
+когда их результат потребуется.
+#+END_NOTES
+** Lists
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+"Hello" ++ ", World!" -- "Hello world!"
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+[1..5] == [1, 2, 3, 4, 5]
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+['A'..'F'] == "ABCDEF"
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+[1..]
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+[1..3] ++ [4..6] -- [1, 2, 3, 4, 5, 6]
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+1 : [2, 3, 4] -- [1, 2, 3, 4]
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+[x*2 | x <- [1..5]] -- [2, 4, 6, 8, 10]
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+[(x, y) | x <- [1..3], y <- [1..3], x + y > 4] -- [(2,3), (3,2), (3,3)]
+#+end_src
+
+** Functions
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+add :: Integer -> Integer -> Integer
+add a b = a + b
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+add 1 3 -- 4
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+addOne = add 1 -- :: Integer -> Integer
+
+addOne 4 -- 5
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+main :: IO ()
+main = putStrLn "Hello, World!"
+#+end_src
+
+** Controls
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+factorial :: Integer -> Integer
+factorial n = if n < 2
+              then 1
+              else n * factorial (n - 1)
+#+end_src
+
+#+attr_reveal: :frag (roll-in)
+#+begin_src haskell
+factorial :: Integer -> Integer
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+#+end_src
+
+** TODO Data
+
+* Patterns
+#+BEGIN_NOTES
+Функциональное программирование часто критикуют за использование математического
+жаргона. Термины вроде зигохистоморфный препроморфизм конечно не помогают
+продавать ФП. Названия же паттернов ООП более привычны для нас "Мост", "Фасад",
+"Адаптер", но в тоже время эти знакомые названия не очень то помогают в
+понимании реализации паттернов.
+
+В ФП паттерны имеют под собой математическую основу со своими законами, в ООП же
+любой паттерн можно реализовать множеством разных способов и это не будет ошибкой.
+#+END_NOTES
+
+#+BEGIN_LEFTCOL
+ * Semigroup
+ * Monoid
+ * Functor
+ * Monad
+ * Catamorphism
+#+END_LEFTCOL
+
+#+BEGIN_RIGHTCOL
+#+attr_reveal: :frag (roll-in)
+ * Appendable
+ * Aggregatable
+ * Mappable
+ * Chainable
+ * Collapsable
+#+END_RIGHTCOL
+
+* Semigroup
+#+REVEAL: split
+#+BEGIN_NOTES
+Паттерн проектирования можно определить как часто встречающееся решение
+определенной проблемы при проектировании архитектуры программ. Давайте
+рассмотрим код, в котором мы запускаем приложение с конфигурациями полученными из
+разных источников, и попробуем выделить в нем паттерн.
+
+Для начала определим первый источник конфигурации - аргументы запуска приложения:
+#+END_NOTES
+#+BEGIN_SRC java
+    Config configFromArgs = fromArgs(args);
+    startApplication(configFromArgs);
+
+
+#+END_SRC
+#+BEGIN_NOTES
+Теперь добавим возможность конфигурирования приложения через файл. Что теперь мы
+передадим в функцию startApplicaton?
+#+END_NOTES
+#+REVEAL: split
+#+BEGIN_SRC java
+    Config configFromArgs = fromArgs(args);
+    Config configFromFile = fromFile("config.yml");
+    startApplication(???);
+
+#+END_SRC
+#+BEGIN_NOTES
+Если мы не хотим менять сигнатуру функции startApplication, то решением может
+стать некая функция combine, которая соединяет два конфига из разных источников
+в один объект.
+#+END_NOTES
+#+REVEAL: split
+#+BEGIN_SRC java
+    Config configFromArgs = fromArgs(args);
+    Config configFromFile = fromFile("config.yml");
+    Config config = combine(configFromFile, configFromArgs);
+    startApplication(config);
+#+END_SRC
+#+BEGIN_NOTES
+Если источников конфигурации станет больше двух, то мы с легкостью можем написать
+функцию, которая применяя функцию combine сворачивает список конфигов из разных
+источников:
+#+END_NOTES
+#+REVEAL: split
+#+BEGIN_SRC java
+Config config = combineAll(configFromServer,
+                         configFromFile,
+                         configFromSystemEnv,
+                         configFromArgs);
+#+END_SRC
+#+BEGIN_NOTES
+Нам даже не важно в каком порядке будут объединяться конфиги, пока сохраняется
+общая последовательность их объединения. Мы можем сначала объединить
+configFromSystemEnv и configFromArgs, потом configFromServer и configFromFile, и
+затем объединить результаты предыдущих объединений. В математике такое свойство
+операции называется ассоциативностью.
+
+Конфиг в примере выше можно заменить на получение и композицию метрик с разных
+серверов или соединение логов с нескольких сервисов. Объединяет их одно -
+функция композиции, со следующей сигнатурой:
+#+END_NOTES
+
+#+REVEAL: split
+#+BEGIN_SRC java
+public <T> T apply(T a, T b);
+#+END_SRC
+
+#+BEGIN_NOTES
+Функция принимает два аргумента одного типа и возвращает результат того же типа
+что и аргументы. В общей алгебре множество с заданной на нем ассоциативной бинарной
+операцией называется полугруппой. Математики это определение записывают
+следующим образом:
+#+END_NOTES
+** Overview
+#+REVEAL: split
+$$
+(G, \cdot  : G \times  G \rightarrow  G)\\
+(x \cdot y) \cdot z = x \cdot (y \cdot z)
+$$
+
+#+REVEAL: split
+#+BEGIN_NOTES
+Теперь давайте попробуем представить полугруппу в виде Java интерфейса:
+#+END_NOTES
+#+BEGIN_SRC java
+public interface Semigroup<A> {
+    A apply(A a, A b);
+}
+#+END_SRC
+
+#+BEGIN_NOTES
+И тоже самое в Haskell:
+#+END_NOTES
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+class Semigroup a where
+  (<>) :: a -> a -> a
+#+END_SRC
+
+** Examples
+#+REVEAL: split
+#+BEGIN_NOTES
+Приведем несколько примеров полугрупп.
+Первый пример: строки и операция конкатенации.
+#+END_NOTES
+#+BEGIN_SRC java
+static class StringSemigroup implements Semigroup<String> {
+    public String apply(String x, String y) {
+        return x + y;
+    }
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+StringSemigroup ss = new StringSemigroup();
+ss.apply("Hello", ss.apply(" ", "World"));
+#+END_SRC
+
+#+REVEAL: split
+#+BEGIN_NOTES
+Тоже самое на Haskell
+#+END_NOTES
+#+BEGIN_SRC haskell
+instance Semigroup String where
+  (<>) = (++)
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+"Hello" <> " " <> "World"
+#+END_SRC
+
+#+RESULTS:
+: Prelude> "Hello World"
+
+#+REVEAL: split
+#+BEGIN_NOTES
+Другой пример полугруппы - множество целых чисел и определенная на них операция
+минимума:
+#+END_NOTES
+#+BEGIN_SRC java
+class MinIntSemigroup implements Semigroup<Integer> {
+    public Integer apply(Integer a, Integer b) {
+        return a < b ? a : b;
+    }
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+MinIntSemigroup ms = new MinIntSemigroup();
+ms.apply(100, ms.apply(42, 512));
+#+END_SRC
+
+#+REVEAL: split
+#+BEGIN_NOTES
+Довольно легко написать функцию свертки на списке полугрупп. Со
+следующей сигнатурой:
+#+END_NOTES
+#+BEGIN_SRC java
+Optional<T> sconcat(Semigroup<T> semigroup, List<T> list)
+#+END_SRC
+
+#+BEGIN_SRC haskell
+sconcat :: Semigroup a => [a] -> Maybe a
+#+END_SRC
+
+#+BEGIN_NOTES
+Сразу бросается в глаза то, что функция sconcat вынуждена возвращать тип
+Optional, так как мы можем передать в нее пустой список. С полугруппой
+MinIntSemigroup это оправдано, так как не понятно, что нам возвращать в случае
+пустого списка. Но, например, для полугруппы StringSemigroup мы бы могли вернуть
+пустую строку, а в случае с конфигами - пустой конфиг без параметров. Для этого
+нам нужно добавить к бинарной операции еще некий нейтральный элемент и таким
+образом мы получаем моноид.
+#+END_NOTES
+
+* Monoid
+** Overview
+#+BEGIN_NOTES
+Моноидом называется множество M, на котором задана бинарная ассоциативная
+операция, и в котором существует нейтральный элемент e, удовлетворяющий
+следующему равенству:
+#+END_NOTES
+
+$$
+(G, \cdot  : G \times  G \rightarrow  G)\\
+(x \cdot y) \cdot z = x \cdot (y \cdot z)\\
+e \cdot x = x \cdot e = x
+$$
+
+#+REVEAL: split
+#+BEGIN_NOTES
+Выразим это в виде Java интерфейса, расширив интерфейс полугруппы, так как по
+определению любой моноид также является и полугруппой:
+#+END_NOTES
+#+BEGIN_SRC java
+public interface Monoid<A> extends Semigroup<A> {
+    A empty();
+}
+#+END_SRC
+
+#+BEGIN_NOTES
+И в виде класса типов в Haskell:
+#+END_NOTES
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+class Semigroup a => Monoid a where
+  mempty  :: a
+#+END_SRC
+
+** Examples
+#+BEGIN_NOTES
+Приведем примеры моноидов:
+#+END_NOTES
+#+REVEAL: split
+#+BEGIN_SRC java
+class StringMonoid implements Monoid<String> {
+    public String empty() { return ""; }
+    public String apply(String a, String b) {
+        return a + b;
+    }
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+class IntSumMonoid implements Monoid<Integer> {
+    public Integer empty() { return 0; }
+    public Integer apply(Integer a, Integer b) {
+        return a + b;
+    }
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+class IntProdMonoid implements Monoid<Integer> {
+    public Integer empty() { return 1; }
+    public Integer apply(Integer a, Integer b) {
+        return a * b;
+    }
+}
+#+END_SRC
+
+#+BEGIN_NOTES
+И благодаря нейтральному элементу мы можем реализовать функцию свертки без
+использования типа Optional:
+#+END_NOTES
+#+REVEAL: split
+#+BEGIN_SRC java
+public static <T> T mconcat(Monoid<T> monoid, List<T> list)
+#+END_SRC
+
+#+BEGIN_SRC haskell
+mconcat :: [a] -> a
+#+END_SRC
+
+#+BEGIN_NOTES
+Поскольку бинарная операция принимает два занчения одного типа и в качестве
+результата возвращает значение того же типа, то это позволяет нам легко строить
+композицию моноидов.
+Мы можем из двух моноидов получить один составной, потом добавить к нему третий
+и так далее. И в результате мы все равно получим тот же самый моноид, готовый к
+дальнейшей композиции.
+
+Моноид как паттерн позволяет нам собрать что-то сложное из простых частей не
+вводя дополнительных концепций. А ассоциативность этой операции позволяет нам
+разделить применение этой операции по разным потокам или даже разным сервисам.
+#+END_NOTES
+
+* Functor
+#+REVEAL: split
+#+BEGIN_NOTES
+Давайте поразмышляем над следующими тремя примерами кода.
+TODO: подобрать примеры получше
+#+END_NOTES
+
+#+BEGIN_SRC java
+Customer customer = findCustomerByName(name);
+String city = null;
+if (customer != null) {
+    city = customer.getAddress().getCity();
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+List<Customer> customers = findAllCustomers();
+List<String> cities = new ArrayList<String>();
+for (Customer customer : customers) {
+    String city = customer.getAddress().getCity();
+    cities.add(city);
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+Future<Customer> customer = findCustomerByName(name);
+String city = customer.get().getAddress().getCity();
+#+END_SRC
+
+#+BEGIN_NOTES
+У них гораздо больше общего чем может показаться на первый взгляд. Все эти
+примеры можно переписать с использованием паттерна Функтор.
+#+END_NOTES
+
+** Overview
+#+REVEAL: split
+#+BEGIN_NOTES
+По определению из математики функтор — особый тип отображений между категориями.
+Его можно понимать как отображение, сохраняющее структуру.
+
+В Java функтором называют структуру данных, которая инкапсулирует некоторое
+значение и имеет метод map со следующей сигнатурой для трансформации этого
+значения:
+#+END_NOTES
+#+BEGIN_SRC java
+interface Functor<A> {
+    <B> Functor<B> map(Function<A, B> fn);
+}
+#+END_SRC
+
+#+BEGIN_NOTES
+В Haskell функтор определен следующем образом:
+#+END_NOTES
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+#+END_SRC
+#+BEGIN_NOTES
+Это можно прочитать следующим образом:
+Тип f принадлежит к классу типов функтор, если для него определена функция fmap,
+у которой первый параметр - это функция, принимающая значения типа a и
+возвращающая значение типа b, второй параметр - это f параметризованный типом a
+и результат - f, параметризованный типом b.
+
+Тип f b - это тип высшего порядка. В Java, это было бы что-то
+вроде: F<B>, то есть любой контейнер, который содержит тип B. Таким образом мы
+бы получили возможность абстрагироваться не только от типа внутри контейнеров,
+но и от типов самих контейнеров. Но к сожалению в Java так сделать нельзя (но
+можно сделать в Scala)
+#+END_NOTES
+
+** Laws
+#+BEGIN_NOTES
+Но этого недостаточно, чтобы определить функтор. Как и в случае с моноидом
+функтор должен удовлетворять некоторым законам, которые мы не можем выразить в
+языках вроде Java или Haskell. Вот эти законы:
+#+END_NOTES
+
+\begin{multline}
+\shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C
+\shoveleft F(g \circ f) = F(g) \circ F(f)
+\shoveleft F(\text{id}_x)=\text{id}_{F(x)}
+\end{multline}
+
+#+REVEAL: split
+#+BEGIN_NOTES
+Запишем их в виде кода.
+1. Вызов функции map с функцией identity должен вернуть тот же самый функтор:
+#+END_NOTES
+Identity Law
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+functor.map(x -> x) == functor
+#+END_SRC
+
+#+BEGIN_NOTES
+2. Закон композиции:
+#+END_NOTES
+#+attr_reveal: :frag (roll-in)
+Composition Law
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+functor.map(x -> f(g(x))) == functor.map(g).map(f)
+#+END_SRC
+
+#+BEGIN_NOTES
+Смысл этих законов сводится к тому, что функция map должна взять содержимое
+контейнера, и применить к нему функцию, которую мы передали, при этом не меняя
+структуры контейнера.
+#+END_NOTES
+** Examles
+#+BEGIN_NOTES
+Рассмотрим самые распространенные примеры функторов.
+#+END_NOTES
+
+*** Optional
+#+BEGIN_NOTES
+Optional это тип данных, который может либо содержать значение, либо нет.
+Реализация функции map в этом случае довольно проста. В случае если Optional не
+содержит значения - возвращаем пустой Optional. Если значение присутствует -
+применяем к нему переданную функцию и возвращаем новый экземпляр Optional с
+трансформированным значением.
+#+END_NOTES
+
+#+BEGIN_SRC java
+class Optional<T> implements Functor<T> {
+    private final T value;
+
+    private Optional(T value) {
+        this.value = value;
+    }
+
+    @Override
+    public <R> Optional<R> map(Optional<T, R> f) {
+        if (value == null)
+            return empty();
+        else
+            return of(f.apply(value));
+    }
+
+    public static <T> Optional<T> of(T a) {
+        return new Optional<T>(a);
+    }
+
+    public static <T> Optional<T> empty() {
+        return new Optional<T>(null);
+    }
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+Optional<Customer> customer = findCustomerByName(name);
+Optional<String> city = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity);
+#+END_SRC
+
+#+REVEAL: split
+#+BEGIN_SRC haskell
+Maybe a = Nothing | Just a
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+instance Functor Maybe where
+    fmap _ Nothing   = Nothing
+    fmap f (Just a)  = Just (f a)
+#+END_SRC
+
+*** List
+#+BEGIN_NOTES
+Функтор не обязан содержать только одно значение, например список также является
+функтором. Сигнатура функции map остается прежней, но ее поведение меняется. В
+случае списка map применяет функцию трансформации к каждому элементу, возвращая
+новый список.
+#+END_NOTES
+#+BEGIN_SRC java
+class FList<T> extends ArrayList<T> implements Functor<T> {
+
+    @Override
+    public <R> FList<R> map(Function<T, R> f) {
+        FList<R> result = new FList<>();
+        for (int i = 0; i < size(); i++) {
+            R newElement = f.apply(get(i));
+            result.add(newElement);
+        }
+        return result;
+    }
+}
+ #+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+FList<Customer> customers = getAllCustomers();
+FList<String> cities = customers
+    .map(Customer::getAddress)
+    .map(Address::getCity);
+#+END_SRC
+
+*** Promise
+#+BEGIN_NOTES
+Определение функтора не накладывает никаких ограничений ни на структуру
+контейнера, ни на то как значение в него попадает или как его достать от туда. Функтор
+вообще может не содержать никакого значения в данный момент, а получать его
+позже. Например, функтор можно имплементировать для класса Future<T>. При
+создании объекта Future<T> в нем нет никакого значения, оно там появится когда
+завершиться какое-то действие. Выполнится http запрос к внешнему
+сервису или чтение из БД. Но это не мешает нам применять
+трансформации к этому еще не полученному
+значению через функцию map, так же как мы делали это с List и Optional. При этом
+функция map не блокирует поток, ожидая появления значения. Таким образом мы можем
+строить цепочки неблокирующих вычислений.
+#+END_NOTES
+#+BEGIN_SRC java
+class Promise<T> implements Functor<T> {
+    public <R> Promise<R> map(Function<T, R> f) { ... }
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+Promise<Customer> customer = customerServiceApi.getCustomerById(id);
+Promise<String> city = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity);
+#+END_SRC
+
+#+BEGIN_NOTES
+По приведенным выше примерам функторов можно заметить на сколько это мощная
+абстракция. Мы использовали один и тот же интерфейс для реализации цепочки отложенных
+вычислений, трансформации всех элементов списка и работы с неопределенным значением.
+#+END_NOTES
+
+* TODO Monad
+#+BEGIN_NOTES
+Функтор удобный и часто используемый паттерн, но в некоторых ситуациях он нам не
+подходит. Например, когда функция трансформации сама возвращает функтор вместо
+обычного значения.
+#+END_NOTES
+
+#+BEGIN_SRC java
+public Optional<Manager> findLocalManager(String city) { ... }
+
+//...
+Optional<Customer> customer = findCustomerByName(name);
+Optional<Optional<Manager>> manager = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity)
+    .map(city -> findLocalManager(city));
+#+END_SRC
+
+#+BEGIN_NOTES
+Если мы воспользуемся функцией map, то в результате получим тип
+Optional<Optional<Manager>> с которым потом не понятно что делать.
+
+Функция map из определения функтора имеет следующую сигнатуру:
+#+END_NOTES
+
+#+REVEAL: split
+#+BEGIN_SRC haskell
+(a -> b) -> f a -> f b
+#+END_SRC
+
+#+BEGIN_NOTES
+Нам же нужна функция со следующей сигнатурой:
+#+END_NOTES
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+(a -> f b) -> f a -> f b
+#+END_SRC
+
+#+BEGIN_NOTES
+И ее мы найдем в классе типов монада
+#+END_NOTES
+** Overview
+#+BEGIN_NOTES
+Монада — это общий способ описать идею последовательных вычислений, которые
+можно соединять вместе так, чтобы от результата предыдущего вычисления зависело
+следующее.
+
+С точки зрения программирования монада это тип данных с одним параметром,
+обладающим двумя функциями: Функцией конструктором (unit/pure/return), которая
+оборачивает некоторое значение в монаду. И функцией связывания (flatMap/bind).
+Как и рассмотренные ранее паттерны монада должна удовлетворять некоторым
+законам, знакомство с которыми мы оставим за рамками этой презентации.
+
+Интерфейс Monad может выглядеть на Java следующим образом:
+#+END_NOTES
+
+#+BEGIN_SRC java
+public interface Monad<T, M extends Monad<?, ?>> extends Functor<T> {
+    M flatMap(Function<T, M> f);
+}
+#+END_SRC
+
+** Examples
+*** Optional
+#+BEGIN_NOTES
+Попробуем написать имплиментацию этого интерфейса для Optional
+#+END_NOTES
+
+#+BEGIN_LARGE_SRC
+#+BEGIN_SRC java
+class Optional<T> implements Monad<T, Optional<T>> {
+    private final T value;
+
+    private Optional(T value) {
+        this.value = value;
+    }
+
+    public static <T> Optional<T> of(T a) {
+        return new Optional<>(a);
+    }
+
+    public static <T> Optional<T> empty() {
+        return new Optional<>(null);
+    }
+
+    @Override
+    public <B> Optional<B> map(Function<T, B> fn) {
+        if (value == null)
+            return empty();
+        else
+            return of(fn.apply(value));
+    }
+
+    @Override
+    public Optional<T> flatMap(Function<T, Optional<T>> fn) {
+        if (value == null)
+            return empty();
+        else
+            return fn.apply(value);
+    }
+}
+#+END_SRC
+#+END_LARGE_SRC
+
+#+BEGIN_NOTES
+Вернемся к нашему примеру, где мы хотели найти менеджера для клиента. Теперь он
+будет выглядеть так:
+#+END_NOTES
+
+#+REVEAL: split
+#+BEGIN_SRC java
+public Optional<Manager> findLocalManager(String city) { ... }
+
+//...
+Optional<Customer> customer = findCustomerByName(name);
+Optional<Manager> manager = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity)
+    .flatMap(this::findLocalManager);
+#+END_SRC
+
+#+BEGIN_NOTES
+И если потребуется, то можно с легкостью продолжить эту цепочку. Например, таким
+образом мы можем безопасно добраться до глубоко вложенных полей в структурах:
+#+END_NOTES
+
+#+REVEAL: split
+#+BEGIN_SRC java
+class Person {
+    private PersonalData personalData;
+}
+
+class PersonalData {
+    private Contact contact;
+}
+
+class Contact {
+    private Address address;
+}
+
+class Address {
+    private String city;
+}
+#+END_SRC
+
+#+BEGIN_NOTES
+Во первых понять по этой структуре какие поля обязательные, а какие нет -
+невозможно, так что будем считать что null может быть в любом поле и теперь
+хотим у человека получить город проживания. Для этого нам придется написать
+что-то вроде:
+#+END_NOTES
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+String city = null;
+if (person.getPersonalData() != null
+    && person.getPersonalData().getContact() != null
+    && person.getPersonalData().getContact().getAddress() != null) {
+    city = person.getPersonalData().getContact().getAddress().getCity();
+}
+#+END_SRC
+
+#+BEGIN_NOTES
+Выглядит этот код хоть и привычно, но во-первых в нем можно допустить ошибку,
+во-вторых он наполнен визуальным мусором, который мешает понимать его суть.
+Давайте перепишем этот пример с использованием Optional:
+#+END_NOTES
+
+#+REVEAL: split
+#+BEGIN_SRC java
+class Person {
+    private Optional<PersonalData> personalData;
+}
+
+class PersonalData {
+    private Optional<Contact> contact;
+}
+
+class Contact {
+    private Optional<Address> address;
+}
+
+class Address {
+    private String city;
+}
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+Optional<String> city = person.getPersonalData()
+    .flatMap(PersonalData::getContact)
+    .flatMap(Contact::getAddress)
+    .map(Address::getCity);
+#+END_SRC
+#+BEGIN_NOTES
+На мой взгляд теперь из кода явно видно что мы хотим сделать, компилятор
+защищает нас от ошибок а типы стали частью документации к коду.
+#+END_NOTES
+
+*** Promise
+#+BEGIN_NOTES
+Давайте посмотрим на функции ниже и подумаем как нам сделать следующее: получить
+клиента по имени, потом по его адресу найти менеджера и запланировать между ними
+встречу. И сделать все это асинхронно, без блокировок.
+#+END_NOTES
+#+BEGIN_SRC java
+public Promise<Customer> getCustomerByName(String name) { ... }
+public Promise<Manager> getLocalManager(Address customerAddress) { ... }
+public Promise<Meeting> scheduleMeeting(Manager manager, Customer customer) { ... }
+#+END_SRC
+
+#+BEGIN_NOTES
+На самом деле для этого нам не нужно ничего знать кроме того что Promise также
+является монадой. Сделать то что мы хотим можно следующим образом:
+#+END_NOTES
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+Promise<Meeting> meeting = getCustomerByName(name)
+    .flatMap(customer ->
+             getLocalManager(customer.getAddress())
+                 .flatMap(manager ->
+                          scheduleMeeting(manager, customer)));
+#+END_SRC
+
+#+BEGIN_NOTES
+Таким образом мы можем строить цепочки связанных асинхронных вызовов не
+используя коллбеки или какие-то дополнительные инструменты синхронизации.
+#+END_NOTES
+*** For comprehension
+#+BEGIN_NOTES
+В Haskell и Scala монады настолько распространены, что существует специальный
+синтаксис для композиции монадических функций. Благодаря ему можно переписать
+этот код:
+#+END_NOTES
+#+REVEAL: split
+#+BEGIN_SRC scala
+val meeting = getCustomerByName(name)
+  .flatMap(customer =>
+      getLocalManager(customer.address)
+        .flatMap(manager =>
+          scheduleMeeting(manager, customer))
+  )
+#+END_SRC
+
+#+BEGIN_NOTES
+Вот так:
+#+END_NOTES
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC scala
+val meeting = for {
+  customer <- getCustomerByName(name)
+  manager <- getLocalManager(customer.address)
+  meeting <- scheduleMeeting(manager, customer)
+} yield meeting
+#+END_SRC
+
+#+BEGIN_NOTES
+В Scala такая форма записи называется for-comprehension
+#+END_NOTES
+#+REVEAL: split
+
+#+BEGIN_NOTES
+Either?
+#+END_NOTES
+
+* End
+#+BEGIN_NOTES
+Абстракции крайне важны. В принципе все чем мы занимаемся в программировании -
+это проектирование абстракций и взаимодействий между ними. К признакам хороших
+абстракций можно отнести возможность комбинировать их друг с другом и
+универсальность, то есть количество разных вещей, которые можно выразить через
+абстракцию.
+
+У математиков очень большой опыт в построении и использовании абстракций. И
+поскольку язык Хаскелл был разработан математиками, то нет ничего удивительного
+что в нем используются знакомые математикам и проверенные временем абстракции. И
+дальше они уже потихоньку протекают в мейнстрим языки программирования.
+
+
+
+
+
+
+Это позволяет рассуждать о коде,  в чем и должны помогать паттерны. Только в отличие от ооп и 3ех разновидностей стнглтонов под этими паттернами есть матиматическое основание. И строгие поавила что является моноидом, а что нет. При этом эти правила хоть и не требуются еа уровне языка, зотя бы можно проверитб юнит тестом.
+
+Слыша слово моноид я понимаю что это что-то что я могу заредюсить и при этом сделать это параллельно
+Свойство ассоциативности кажется таким не существенным, но оно очень мощное.
+
+Семигруппа - значит можем параллелить или асинхронно обробатовать батчами
+Моноид - можем делать фолд A functor is a way to apply a function over or around
+some structure that we don’t want to alter. That is, we want to apply the
+function to the value that is “inside” some structure and leave the structure
+alone.
+
+То же самое с декомпозицией большой задачи. Мой опыт показывает, что чем меньше
+контекста нужно держать в голове для осознания одной строчки кода, тем проще её
+понять. В Haskell все направлено на то, чтобы этот контекст сделать как можно
+меньше, то есть, чтобы не думать. Чистые функции — чтобы не думать о посторонних
+эффектах. Иммутабельность — чтобы не думать, где переменная могла измениться.
+Типы — чтобы не думать, какую экзотику могут скормить в нашу функцию.
+Полиморфизм — чтобы вообще не думать о конкретных значениях, а думать о
+действиях. Разделение контекста и значений на уровне типов — чтобы не думать,
+какую часть внешнего мира изменит вызов этой функции. Алгебраические типы данных
+— чтобы не думать обо всех случаях и сценариях сразу. Ряд можно продолжать долго
+#+END_NOTES
+
+* Trash
+
+#+REVEAL: split
+#+BEGIN_SRC haskell
+class Functor m => Monad m where
+    (>>=)   :: m a -> (a -> m b) -> m b
+
+    pure    :: a -> m a
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+instance Monad Maybe where
+    (Just x) >>= k      = k x
+    Nothing  >>= _      = Nothing
+
+    pure x = Just x
+#+END_SRC
+
+
+\begin{multline}
+\shoveleft F : C \to D \\
+\shoveleft X \in C \text{ assign an object } F(X) \in D \\
+\shoveleft f : X \rightarrow Y \in C
+\text{ assign an arrow } F(f) : F(X) \rightarrow F(Y) \in D
+\end{multline}
+
+
+#+attr_reveal: :frag (roll-in)
+\begin{multline}
+\shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C \\
+F(g \circ f) = F(g) \circ F(f) \\ \\
+\shoveleft F(\text{id}_x)=\text{id}_{F(x)}
+\end{multline}
