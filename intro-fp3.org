@@ -1,9 +1,8 @@
 #+REVEAL_EXTRA_CSS: ./css/local.css
 #+REVEAL_EXTRA_CSS: ./css/ember.css
 #+REVEAL_TRANS: fade
-#+REVEAL_PLUGINS: (notes highlight)
+#+REVEAL_PLUGINS: (notes)
 #+REVEAL_ROOT: ./reveal.js-3.8.0
-#+REVEAL_HIGHLIGHT_CSS: https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/atom-one-light.min.css
 #+REVEAL_DEFAULT_FRAG_STYLE: roll-in
 #+OPTIONS: toc:nil num:nil reveal_slide_number:nil author:nil date:nil timestamp:nil
 #+OPTIONS: reveal_width:1200 reveal_height:800
@@ -732,6 +731,7 @@ public interface Monad<T, M extends Monad<?, ?>> extends Functor<T> {
 Попробуем написать имплиментацию этого интерфейса для Optional
 #+END_NOTES
 
+#+BEGIN_LARGE_SRC
 #+BEGIN_SRC java
 class Optional<T> implements Monad<T, Optional<T>> {
     private final T value;
@@ -765,6 +765,7 @@ class Optional<T> implements Monad<T, Optional<T>> {
     }
 }
 #+END_SRC
+#+END_LARGE_SRC
 
 #+BEGIN_NOTES
 Вернемся к нашему примеру, где мы хотели найти менеджера для клиента. Теперь он
