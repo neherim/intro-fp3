@@ -1,0 +1,70 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 28e68e48799c3bd666530e2a5b3a1a1046f70da288420c20f422952cd3f06a4c
+
+name:           haskell-learn
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/haskell-learn#readme>
+homepage:       https://github.com/githubuser/haskell-learn#readme
+bug-reports:    https://github.com/githubuser/haskell-learn/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2019 Author name here
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/haskell-learn
+
+library
+  other-modules:
+      Paths_haskell_learn
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , lens
+    , parsec
+    , split
+  default-language: Haskell2010
+
+executable haskell-learn-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_learn
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , haskell-learn
+    , lens
+    , parsec
+    , split
+  default-language: Haskell2010
+
+test-suite haskell-learn-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_haskell_learn
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      QuickCheck
+    , base >=4.7 && <5
+    , haskell-learn
+    , hspec
+    , lens
+    , parsec
+    , split
+  default-language: Haskell2010
