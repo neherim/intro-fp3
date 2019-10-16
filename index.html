@@ -33,10 +33,9 @@
 <section id="sec-title-slide"><h1 class="title">Functional Programming Patterns</h1>
 </section>
 
-
 <section>
-<section id="slide-org17fb1ab">
-<h2 id="org17fb1ab">Learn Haskell in 10 minutes</h2>
+<section id="slide-org5d4f383">
+<h2 id="org5d4f383">Learn Haskell in 10 minutes</h2>
 <aside class="notes">
 <p>
 Haskell чистый функциональный язык программирования общего назначения c ленивой моделью вычисления.
@@ -77,8 +76,8 @@ Future и возвращать ее в `main` методе, который уж�
 
 </aside>
 </section>
-<section id="slide-org30e545a">
-<h3 id="org30e545a">Lists</h3>
+<section id="slide-org37b8632">
+<h3 id="org37b8632">Lists</h3>
 <div class="org-src-container">
 
 <pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">++</span> <span style="color: #98be65;">", World!"</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">"Hello world!"</span></code>
@@ -128,8 +127,8 @@ Future и возвращать ее в `main` методе, который уж�
 </div>
 
 </section>
-<section id="slide-org642dad8">
-<h3 id="org642dad8">Functions</h3>
+<section id="slide-orgd3874ba">
+<h3 id="orgd3874ba">Functions</h3>
 <div class="org-src-container">
 
 <pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">add</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
@@ -159,8 +158,8 @@ Future и возвращать ее в `main` методе, который уж�
 </div>
 
 </section>
-<section id="slide-orga5733d7">
-<h3 id="orga5733d7">Controls</h3>
+<section id="slide-org99a21cb">
+<h3 id="org99a21cb">Controls</h3>
 <div class="org-src-container">
 
 <pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">factorial</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
@@ -179,14 +178,14 @@ Future и возвращать ее в `main` методе, который уж�
 </div>
 
 </section>
-<section id="slide-org8102622">
-<h3 id="org8102622"><span class="todo TODO">TODO</span> Data</h3>
+<section id="slide-org6452b5b">
+<h3 id="org6452b5b"><span class="todo TODO">TODO</span> Data</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgb61bea8">
-<h2 id="orgb61bea8">Patterns</h2>
+<section id="slide-org8ed9667">
+<h2 id="org8ed9667">Patterns</h2>
 <aside class="notes">
 <p>
 Функциональное программирование часто критикуют за использование математического
@@ -230,10 +229,10 @@ Future и возвращать ее в `main` методе, который уж�
 </section>
 </section>
 <section>
-<section id="slide-org7605ec3">
-<h2 id="org7605ec3">Semigroup</h2>
+<section id="slide-orgc98cc2b">
+<h2 id="orgc98cc2b">Semigroup</h2>
 </section>
-<section id="slide-org7605ec3-split">
+<section id="slide-orgc98cc2b-split">
 <aside class="notes">
 <p>
 Паттерн проектирования можно определить как часто встречающееся решение
@@ -247,12 +246,13 @@ Future и возвращать ее в `main` методе, который уж�
 </p>
 
 </aside>
+<p>
+One configuration source
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
 <code>    startApplication<span style="color: #51afef;">(</span>configFromArgs<span style="color: #51afef;">)</span>;</code>
-<code></code>
-<code></code>
 </code></pre>
 </div>
 <aside class="notes">
@@ -263,13 +263,15 @@ Future и возвращать ее в `main` методе, который уж�
 
 </aside>
 </section>
-<section id="slide-org7605ec3-split">
+<section id="slide-orgc98cc2b-split">
+<p>
+Two configuration sources
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
 <code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromFile</span> = fromFile<span style="color: #51afef;">(</span><span style="color: #98be65;">"config.yml"</span><span style="color: #51afef;">)</span>;</code>
 <code>    startApplication<span style="color: #51afef;">(</span>???<span style="color: #51afef;">)</span>;</code>
-<code></code>
 </code></pre>
 </div>
 <aside class="notes">
@@ -281,7 +283,10 @@ Future и возвращать ее в `main` методе, который уж�
 
 </aside>
 </section>
-<section id="slide-org7605ec3-split">
+<section id="slide-orgc98cc2b-split">
+<p>
+Two configuration sources
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
@@ -299,7 +304,10 @@ Future и возвращать ее в `main` методе, который уж�
 
 </aside>
 </section>
-<section id="slide-org7605ec3-split">
+<section id="slide-orgc98cc2b-split">
+<p>
+Multiple configuration sources
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">config</span> = combineAll<span style="color: #51afef;">(</span>configFromServer,</code>
@@ -326,7 +334,7 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </aside>
 
 </section>
-<section id="slide-org7605ec3-split">
+<section id="slide-orgc98cc2b-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">apply</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">b</span><span style="color: #51afef;">)</span>;</code>
@@ -343,19 +351,20 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 
 </aside>
 </section>
-<section id="slide-orgb5b192b">
-<h3 id="orgb5b192b">Overview</h3>
+<section id="slide-orge18c4aa">
+<h3 id="orge18c4aa">Overview</h3>
 </section>
-<section id="slide-orgb5b192b-split">
-<p>
-\[
-(G, \cdot  : G \times  G \rightarrow  G)\\
-(x \cdot y) \cdot z = x \cdot (y \cdot z)
-\]
-</p>
+<section id="slide-orge18c4aa-split">
+<div>
+\begin{multline}
+\shoveleft (G, \cdot : G \times G \rightarrow  G) \\
+\shoveleft (x \cdot y) \cdot z = x \cdot (y \cdot z) \\
+\end{multline}
+
+</div>
 
 </section>
-<section id="slide-orgb5b192b-split">
+<section id="slide-orge18c4aa-split">
 <aside class="notes">
 <p>
 Теперь давайте попробуем представить полугруппу в виде Java интерфейса:
@@ -384,10 +393,13 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </div>
 
 </section>
-<section id="slide-org22625e3">
-<h3 id="org22625e3">Examples</h3>
+<section id="slide-org2b9c757">
+<h3 id="org2b9c757">Examples</h3>
+<div class="outline-text-3" id="text-org2b9c757">
+</div>
 </section>
-<section id="slide-org22625e3-split">
+<section id="slide-orgbfb8831">
+<h4 id="orgbfb8831">String semigroup</h4>
 <aside class="notes">
 <p>
 Приведем несколько примеров полугрупп.
@@ -413,7 +425,7 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </div>
 
 </section>
-<section id="slide-org22625e3-split">
+<section id="slide-orgbfb8831-split">
 <aside class="notes">
 <p>
 Тоже самое на Haskell
@@ -434,7 +446,8 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </div>
 
 </section>
-<section id="slide-org22625e3-split">
+<section id="slide-org1f526f3">
+<h4 id="org1f526f3">Numerical semigroup</h4>
 <aside class="notes">
 <p>
 Другой пример полугруппы - множество целых чисел и определенная на них операция
@@ -460,7 +473,7 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </div>
 
 </section>
-<section id="slide-org22625e3-split">
+<section id="slide-org1f526f3-split">
 <aside class="notes">
 <p>
 Довольно легко написать функцию свертки на списке полугрупп. Со
@@ -496,13 +509,13 @@ MinIntSemigroup это оправдано, так как не понятно, ч
 </section>
 </section>
 <section>
-<section id="slide-org95ddec5">
-<h2 id="org95ddec5">Monoid</h2>
-<div class="outline-text-2" id="text-org95ddec5">
+<section id="slide-org5e8e28f">
+<h2 id="org5e8e28f">Monoid</h2>
+<div class="outline-text-2" id="text-org5e8e28f">
 </div>
 </section>
-<section id="slide-orgb2e7fce">
-<h3 id="orgb2e7fce">Overview</h3>
+<section id="slide-orgf59aa56">
+<h3 id="orgf59aa56">Overview</h3>
 <aside class="notes">
 <p>
 Моноидом называется множество M, на котором задана бинарная ассоциативная
@@ -521,7 +534,7 @@ e \cdot x = x \cdot e = x
 </p>
 
 </section>
-<section id="slide-orgb2e7fce-split">
+<section id="slide-orgf59aa56-split">
 <aside class="notes">
 <p>
 Выразим это в виде Java интерфейса, расширив интерфейс полугруппы, так как по
@@ -551,8 +564,8 @@ e \cdot x = x \cdot e = x
 </div>
 
 </section>
-<section id="slide-org2798727">
-<h3 id="org2798727">Examples</h3>
+<section id="slide-org038a471">
+<h3 id="org038a471">Examples</h3>
 <aside class="notes">
 <p>
 Приведем примеры моноидов:
@@ -560,7 +573,7 @@ e \cdot x = x \cdot e = x
 
 </aside>
 </section>
-<section id="slide-org2798727-split">
+<section id="slide-org038a471-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">StringMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
@@ -602,7 +615,7 @@ e \cdot x = x \cdot e = x
 
 </aside>
 </section>
-<section id="slide-org2798727-split">
+<section id="slide-org038a471-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">mconcat</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Monoid</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">monoid</span>, <span style="color: #ECBE7B;">List</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">list</span><span style="color: #51afef;">)</span></code>
@@ -636,10 +649,10 @@ e \cdot x = x \cdot e = x
 </section>
 </section>
 <section>
-<section id="slide-orgc0b2ec9">
-<h2 id="orgc0b2ec9">Functor</h2>
+<section id="slide-org59705c6">
+<h2 id="org59705c6">Functor</h2>
 </section>
-<section id="slide-orgc0b2ec9-split">
+<section id="slide-org59705c6-split">
 <aside class="notes">
 <p>
 Давайте поразмышляем над следующими тремя примерами кода.
@@ -685,10 +698,10 @@ TODO: подобрать примеры получше
 </aside>
 
 </section>
-<section id="slide-org83b3454">
-<h3 id="org83b3454">Overview</h3>
+<section id="slide-orgd681e9f">
+<h3 id="orgd681e9f">Overview</h3>
 </section>
-<section id="slide-org83b3454-split">
+<section id="slide-orgd681e9f-split">
 <aside class="notes">
 <p>
 По определению из математики функтор — особый тип отображений между категориями.
@@ -742,8 +755,8 @@ TODO: подобрать примеры получше
 </aside>
 
 </section>
-<section id="slide-org3d01144">
-<h3 id="org3d01144">Laws</h3>
+<section id="slide-org241f539">
+<h3 id="org241f539">Laws</h3>
 <aside class="notes">
 <p>
 Но этого недостаточно, чтобы определить функтор. Как и в случае с моноидом
@@ -755,15 +768,15 @@ TODO: подобрать примеры получше
 
 <div>
 \begin{multline}
-\shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C
-\shoveleft F(g \circ f) = F(g) \circ F(f)
-\shoveleft F(\text{id}_x)=\text{id}_{F(x)}
+\shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C \\
+\shoveleft F(g \circ f) = F(g) \circ F(f) \\
+\shoveleft F(\text{id}_x)=\text{id}_{F(x)} \\
 \end{multline}
 
 </div>
 
 </section>
-<section id="slide-org3d01144-split">
+<section id="slide-org241f539-split">
 <aside class="notes">
 <p>
 Запишем их в виде кода.
@@ -808,8 +821,8 @@ Composition Law
 
 </aside>
 </section>
-<section id="slide-org3f54a76">
-<h3 id="org3f54a76">Examles</h3>
+<section id="slide-orge9df55f">
+<h3 id="orge9df55f">Examles</h3>
 <aside class="notes">
 <p>
 Рассмотрим самые распространенные примеры функторов.
@@ -818,8 +831,8 @@ Composition Law
 </aside>
 
 </section>
-<section id="slide-orgfde953e">
-<h4 id="orgfde953e">Optional</h4>
+<section id="slide-orgf69c297">
+<h4 id="orgf69c297">Optional</h4>
 <aside class="notes">
 <p>
 Optional это тип данных, который может либо содержать значение, либо нет.
@@ -869,7 +882,7 @@ Optional это тип данных, который может либо соде
 </div>
 
 </section>
-<section id="slide-orgfde953e-split">
+<section id="slide-orgf69c297-split">
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code><span style="color: #ECBE7B;">Maybe</span> a <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Just</span> a</code>
@@ -885,8 +898,8 @@ Optional это тип данных, который может либо соде
 </div>
 
 </section>
-<section id="slide-org89ec6cf">
-<h4 id="org89ec6cf">List</h4>
+<section id="slide-org8ca6db0">
+<h4 id="org8ca6db0">List</h4>
 <aside class="notes">
 <p>
 Функтор не обязан содержать только одно значение, например список также является
@@ -923,8 +936,8 @@ Optional это тип данных, который может либо соде
 </div>
 
 </section>
-<section id="slide-orgb05cc4f">
-<h4 id="orgb05cc4f">Promise</h4>
+<section id="slide-orgbfc94c2">
+<h4 id="orgbfc94c2">Promise</h4>
 <aside class="notes">
 <p>
 Определение функтора не накладывает никаких ограничений ни на структуру
@@ -970,8 +983,8 @@ Optional это тип данных, который может либо соде
 </section>
 </section>
 <section>
-<section id="slide-orgbee58b8">
-<h2 id="orgbee58b8"><span class="todo TODO">TODO</span> Monad</h2>
+<section id="slide-org3e892c4">
+<h2 id="org3e892c4"><span class="todo TODO">TODO</span> Monad</h2>
 <aside class="notes">
 <p>
 Функтор удобный и часто используемый паттерн, но в некоторых ситуациях он нам не
@@ -1007,7 +1020,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgbee58b8-split">
+<section id="slide-org3e892c4-split">
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code>(a <span style="color: #dcaeea;">-&gt;</span> b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
@@ -1034,8 +1047,8 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-org996392d">
-<h3 id="org996392d">Overview</h3>
+<section id="slide-org8541529">
+<h3 id="org8541529">Overview</h3>
 <aside class="notes">
 <p>
 Монада — это общий способ описать идею последовательных вычислений, которые
@@ -1065,17 +1078,24 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </code></pre>
 </div>
 
-</section>
-<section id="slide-orgd976e88">
-<h3 id="orgd976e88">Examples</h3>
-<div class="outline-text-3" id="text-orgd976e88">
-</div>
-</section>
-<section id="slide-orgf18b938">
-<h4 id="orgf18b938">Optional</h4>
 <aside class="notes">
 <p>
-Попробуем написать имплиментацию этого интерфейса для Optional
+Функцию unit нельзя выразить в Java интерфейсе, будем считать что ее роль будет
+выполнять конструктор класс
+</p>
+
+</aside>
+</section>
+<section id="slide-orgf684262">
+<h3 id="orgf684262">Examples</h3>
+<div class="outline-text-3" id="text-orgf684262">
+</div>
+</section>
+<section id="slide-orgae3ec2e">
+<h4 id="orgae3ec2e">Optional</h4>
+<aside class="notes">
+<p>
+Попробуем написать имплиментацию этого интерфейса для Optional.
 </p>
 
 </aside>
@@ -1128,7 +1148,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgf18b938-split">
+<section id="slide-orgae3ec2e-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
@@ -1151,7 +1171,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgf18b938-split">
+<section id="slide-orgae3ec2e-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
@@ -1203,7 +1223,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgf18b938-split">
+<section id="slide-orgae3ec2e-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
@@ -1224,9 +1244,11 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </code></pre>
 </div>
 
+</section>
+<section id="slide-orgae3ec2e-split">
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = person.getPersonalData<span style="color: #51afef;">()</span></code>
+<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = person.getPersonalData<span style="color: #51afef;">()</span></code>
 <code>    .flatMap<span style="color: #51afef;">(</span>PersonalData::getContact<span style="color: #51afef;">)</span></code>
 <code>    .flatMap<span style="color: #51afef;">(</span>Contact::getAddress<span style="color: #51afef;">)</span></code>
 <code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
@@ -1241,8 +1263,8 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orge04ff8c">
-<h4 id="orge04ff8c">Promise</h4>
+<section id="slide-org7732e37">
+<h4 id="org7732e37">Promise</h4>
 <aside class="notes">
 <p>
 Давайте посмотрим на функции ниже и подумаем как нам сделать следующее: получить
@@ -1284,8 +1306,8 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-orgd1a660a">
-<h4 id="orgd1a660a">For comprehension</h4>
+<section id="slide-orgd4846fc">
+<h4 id="orgd4846fc">For comprehension</h4>
 <aside class="notes">
 <p>
 В Haskell и Scala монады настолько распространены, что существует специальный
@@ -1295,7 +1317,10 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-orgd1a660a-split">
+<section id="slide-orgd4846fc-split">
+<p>
+Scala:
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> getCustomerByName(name)</code>
@@ -1329,21 +1354,120 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </p>
 
 </aside>
-</section>
-<section id="slide-orgd1a660a-split">
 
+</section>
+<section id="slide-orgf5c43ba">
+<h4 id="orgf5c43ba">Either</h4>
 <aside class="notes">
 <p>
-Either?
+Either - еще одна распространенная монада. Она реализует семантику вычислений
+которые могут завершиться успехом или же неудачей. Either представляет из себя
+двухпараметрический тип, где первый параметр типа (Left) означает ошибку, а
+правый параметр (Right) - успех. Существует несколько способов реализовать этот
+класс на Java, приведем самый примитивный:
 </p>
 
 </aside>
+<div class="LARGE_SRC">
+<div class="org-src-container">
 
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">R</span>, <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">L</span> <span style="color: #dcaeea;">leftVal</span>;</code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">rightVal</span>;</code>
+<code></code>
+<code>    <span style="color: #51afef;">private</span> <span style="color: #c678dd;">Either</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">L</span> <span style="color: #dcaeea;">left</span>, <span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">right</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">this</span>.leftVal = left;</code>
+<code>        <span style="color: #51afef;">this</span>.rightVal = right;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">left</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">L</span> <span style="color: #dcaeea;">left</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Either</span><span style="color: #98be65;">&lt;&gt;(</span>left, <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">right</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">right</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Either</span><span style="color: #98be65;">&lt;&gt;(</span><span style="color: #a9a1e1;">null</span>, right<span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #a9a1e1;">@Override</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">flatMap</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">R</span>, <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #51afef;">&gt;</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>leftVal != <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
+<code>            <span style="color: #51afef;">return</span> left<span style="color: #98be65;">(</span>leftVal<span style="color: #98be65;">)</span>;</code>
+<code>        <span style="color: #51afef;">else</span></code>
+<code>            <span style="color: #51afef;">return</span> f.apply<span style="color: #98be65;">(</span>rightVal<span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code></code>
+<code>    <span style="color: #a9a1e1;">@Override</span></code>
+<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">R</span>, <span style="color: #ECBE7B;">B</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
+<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>leftVal != <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
+<code>            <span style="color: #51afef;">return</span> left<span style="color: #98be65;">(</span>leftVal<span style="color: #98be65;">)</span>;</code>
+<code>        <span style="color: #51afef;">else</span></code>
+<code>            <span style="color: #51afef;">return</span> right<span style="color: #98be65;">(</span>f.apply<span style="color: #51afef;">(</span>rightVal<span style="color: #51afef;">)</span><span style="color: #98be65;">)</span>;</code>
+<code>    <span style="color: #c678dd;">}</span></code>
+<code><span style="color: #51afef;">}</span></code>
+</code></pre>
+</div>
+
+</div>
+
+</section>
+<section id="slide-orgf5c43ba-split">
+<aside class="notes">
+<p>
+Предыдущий пример с Promese можно переписать следующим образом:
+</p>
+
+</aside>
+<p>
+Java
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">ServiceError</span>, <span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getCustomerByName</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">name</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">ServiceError</span>, <span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Address</span> <span style="color: #dcaeea;">customerAddress</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">ServiceError</span>, <span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">scheduleMeeting</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Manager</span> <span style="color: #dcaeea;">manager</span>, <span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">customer</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<code></code>
+<code><span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">ServiceError</span>, <span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">meeting</span> = getCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span></code>
+<code>    .flatMap<span style="color: #51afef;">(</span>customer -&gt;</code>
+<code>             getLocalManager<span style="color: #c678dd;">(</span>customer.getAddress<span style="color: #98be65;">()</span><span style="color: #c678dd;">)</span></code>
+<code>             .flatMap<span style="color: #c678dd;">(</span>manager -&gt;</code>
+<code>                      scheduleMeeting<span style="color: #98be65;">(</span>manager, customer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+<aside class="notes">
+<p>
+И снова, как мы видим, поменяв тип с Promise на Ether, основной алгоритм не
+поменялся, изменился только контекст вычислений. Раньше у нас были вычисления в
+асинхронном контексте, а теперь вычисления с возможной неудачей. Цепочка
+вычислений будет продолжаться пока какая-нибудь из функций не вернет Left
+значение, вместо Right или пока не завершится успешно вся цепочка. На уровне
+типов можно сделать так что будет невозможно воспользоваться значением из Either
+если сначала не проверить, что он содержит, ошибку или результат. Таким образом
+мы добиваемся поведения аналогичного проверяемым исключениям Java. Но, в отличие
+от них, тип Either удобнее композировать.
+</p>
+
+<p>
+Аналогичный пример на Scala:
+</p>
+
+</aside>
+<p class="fragment (roll-in)">
+Scala
+</p>
+<div class="org-src-container">
+
+<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> <span style="color: #51afef;">for</span> {</code>
+<code>  customer <span style="color: #51afef;">&lt;-</span> getCustomerByName(name)</code>
+<code>  manager <span style="color: #51afef;">&lt;-</span> getLocalManager(customer.address)</code>
+<code>  meeting <span style="color: #51afef;">&lt;-</span> scheduleMeeting(manager, customer)</code>
+<code>} <span style="color: #51afef;">yield</span> meeting</code>
+</code></pre>
+</div>
 </section>
 </section>
 <section>
-<section id="slide-org4c7a0b4">
-<h2 id="org4c7a0b4">End</h2>
+<section id="slide-org9f83bfc">
+<h2 id="org9f83bfc">End</h2>
 <aside class="notes">
 <p>
 Абстракции крайне важны. В принципе все чем мы занимаемся в программировании -
@@ -1359,9 +1483,6 @@ Either?
 что в нем используются знакомые математикам и проверенные временем абстракции. И
 дальше они уже потихоньку протекают в мейнстрим языки программирования.
 </p>
-
-
-
 
 
 
@@ -1400,10 +1521,10 @@ alone.
 </section>
 </section>
 <section>
-<section id="slide-orgf55f50c">
-<h2 id="orgf55f50c">Trash</h2>
+<section id="slide-orgf3ceb78">
+<h2 id="orgf3ceb78">Trash</h2>
 </section>
-<section id="slide-orgf55f50c-split">
+<section id="slide-orgf3ceb78-split">
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Functor</span> m <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monad</span> m <span style="color: #51afef;">where</span></code>
