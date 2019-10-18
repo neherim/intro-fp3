@@ -34,8 +34,8 @@
 </section>
 
 <section>
-<section id="slide-org5d4f383">
-<h2 id="org5d4f383">Learn Haskell in 10 minutes</h2>
+<section id="slide-orgd956025">
+<h2 id="orgd956025">Learn Haskell in 10 minutes</h2>
 <aside class="notes">
 <p>
 Haskell чистый функциональный язык программирования общего назначения c ленивой моделью вычисления.
@@ -76,8 +76,8 @@ Future и возвращать ее в `main` методе, который уж�
 
 </aside>
 </section>
-<section id="slide-org37b8632">
-<h3 id="org37b8632">Lists</h3>
+<section id="slide-org4521ff9">
+<h3 id="org4521ff9">Lists</h3>
 <div class="org-src-container">
 
 <pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">++</span> <span style="color: #98be65;">", World!"</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">"Hello world!"</span></code>
@@ -127,8 +127,8 @@ Future и возвращать ее в `main` методе, который уж�
 </div>
 
 </section>
-<section id="slide-orgd3874ba">
-<h3 id="orgd3874ba">Functions</h3>
+<section id="slide-org5660f0c">
+<h3 id="org5660f0c">Functions</h3>
 <div class="org-src-container">
 
 <pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">add</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
@@ -158,8 +158,8 @@ Future и возвращать ее в `main` методе, который уж�
 </div>
 
 </section>
-<section id="slide-org99a21cb">
-<h3 id="org99a21cb">Controls</h3>
+<section id="slide-orgb33119b">
+<h3 id="orgb33119b">Controls</h3>
 <div class="org-src-container">
 
 <pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">factorial</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
@@ -178,14 +178,14 @@ Future и возвращать ее в `main` методе, который уж�
 </div>
 
 </section>
-<section id="slide-org6452b5b">
-<h3 id="org6452b5b"><span class="todo TODO">TODO</span> Data</h3>
+<section id="slide-org358675b">
+<h3 id="org358675b"><span class="todo TODO">TODO</span> Data</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org8ed9667">
-<h2 id="org8ed9667">Patterns</h2>
+<section id="slide-org2a72579">
+<h2 id="org2a72579">Patterns</h2>
 <aside class="notes">
 <p>
 Функциональное программирование часто критикуют за использование математического
@@ -229,10 +229,10 @@ Future и возвращать ее в `main` методе, который уж�
 </section>
 </section>
 <section>
-<section id="slide-orgc98cc2b">
-<h2 id="orgc98cc2b">Semigroup</h2>
+<section id="slide-org3b3b541">
+<h2 id="org3b3b541">Semigroup</h2>
 </section>
-<section id="slide-orgc98cc2b-split">
+<section id="slide-org3b3b541-split">
 <aside class="notes">
 <p>
 Паттерн проектирования можно определить как часто встречающееся решение
@@ -258,32 +258,14 @@ One configuration source
 <aside class="notes">
 <p>
 Теперь добавим возможность конфигурирования приложения через файл. Что теперь мы
-передадим в функцию startApplicaton?
+передадим в функцию startApplicaton? Если мы не хотим менять сигнатуру функции
+startApplication, то решением может стать некая функция combine, которая
+соединяет два конфига из разных источников в один объект.
 </p>
 
 </aside>
 </section>
-<section id="slide-orgc98cc2b-split">
-<p>
-Two configuration sources
-</p>
-<div class="org-src-container">
-
-<pre  class="src src-java"><code trim><code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
-<code>    <span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromFile</span> = fromFile<span style="color: #51afef;">(</span><span style="color: #98be65;">"config.yml"</span><span style="color: #51afef;">)</span>;</code>
-<code>    startApplication<span style="color: #51afef;">(</span>???<span style="color: #51afef;">)</span>;</code>
-</code></pre>
-</div>
-<aside class="notes">
-<p>
-Если мы не хотим менять сигнатуру функции startApplication, то решением может
-стать некая функция combine, которая соединяет два конфига из разных источников
-в один объект.
-</p>
-
-</aside>
-</section>
-<section id="slide-orgc98cc2b-split">
+<section id="slide-org3b3b541-split">
 <p>
 Two configuration sources
 </p>
@@ -304,7 +286,7 @@ Two configuration sources
 
 </aside>
 </section>
-<section id="slide-orgc98cc2b-split">
+<section id="slide-org3b3b541-split">
 <p>
 Multiple configuration sources
 </p>
@@ -334,7 +316,7 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </aside>
 
 </section>
-<section id="slide-orgc98cc2b-split">
+<section id="slide-org3b3b541-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">apply</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">b</span><span style="color: #51afef;">)</span>;</code>
@@ -351,10 +333,10 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 
 </aside>
 </section>
-<section id="slide-orge18c4aa">
-<h3 id="orge18c4aa">Overview</h3>
+<section id="slide-orgd2c5b19">
+<h3 id="orgd2c5b19">Overview</h3>
 </section>
-<section id="slide-orge18c4aa-split">
+<section id="slide-orgd2c5b19-split">
 <div>
 \begin{multline}
 \shoveleft (G, \cdot : G \times G \rightarrow  G) \\
@@ -364,13 +346,16 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </div>
 
 </section>
-<section id="slide-orge18c4aa-split">
+<section id="slide-orgd2c5b19-split">
 <aside class="notes">
 <p>
 Теперь давайте попробуем представить полугруппу в виде Java интерфейса:
 </p>
 
 </aside>
+<p>
+Java
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
@@ -379,27 +364,24 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </code></pre>
 </div>
 
-<aside class="notes">
 <p>
-И тоже самое в Haskell:
+Haskell
 </p>
-
-</aside>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #51afef;">where</span></code>
+<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #51afef;">where</span></code>
 <code>  (<span style="color: #dcaeea;">&lt;&gt;</span>) <span style="color: #dcaeea;">::</span> a <span style="color: #dcaeea;">-&gt;</span> a <span style="color: #dcaeea;">-&gt;</span> a</code>
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org2b9c757">
-<h3 id="org2b9c757">Examples</h3>
-<div class="outline-text-3" id="text-org2b9c757">
+<section id="slide-org627a6f8">
+<h3 id="org627a6f8">Examples</h3>
+<div class="outline-text-3" id="text-org627a6f8">
 </div>
 </section>
-<section id="slide-orgbfb8831">
-<h4 id="orgbfb8831">String semigroup</h4>
+<section id="slide-org154d118">
+<h4 id="org154d118">String semigroup</h4>
 <aside class="notes">
 <p>
 Приведем несколько примеров полугрупп.
@@ -407,6 +389,9 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </p>
 
 </aside>
+<p>
+Java
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">static</span> <span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">StringSemigroup</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
@@ -417,21 +402,9 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </code></pre>
 </div>
 
-<div class="org-src-container">
-
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">StringSemigroup</span> <span style="color: #dcaeea;">ss</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">StringSemigroup</span><span style="color: #51afef;">()</span>;</code>
-<code>ss.apply<span style="color: #51afef;">(</span><span style="color: #98be65;">"Hello"</span>, ss.apply<span style="color: #c678dd;">(</span><span style="color: #98be65;">" "</span>, <span style="color: #98be65;">"World"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
-</code></pre>
-</div>
-
-</section>
-<section id="slide-orgbfb8831-split">
-<aside class="notes">
 <p>
-Тоже самое на Haskell
+Haskell
 </p>
-
-</aside>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Semigroup</span> <span style="color: #ECBE7B;">String</span> <span style="color: #51afef;">where</span></code>
@@ -439,15 +412,30 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </code></pre>
 </div>
 
+</section>
+<section id="slide-org154d118-split">
+<p>
+Java
+</p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">" "</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">"World"</span></code>
+<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">StringSemigroup</span> <span style="color: #dcaeea;">ss</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">StringSemigroup</span><span style="color: #51afef;">()</span>;</code>
+<code>ss.apply<span style="color: #51afef;">(</span><span style="color: #98be65;">"Hello"</span>, ss.apply<span style="color: #c678dd;">(</span><span style="color: #98be65;">" "</span>, <span style="color: #98be65;">"World"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<p>
+Haskell
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">" "</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">"World"</span></code>
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org1f526f3">
-<h4 id="org1f526f3">Numerical semigroup</h4>
+<section id="slide-org6be1c3e">
+<h4 id="org6be1c3e">Numerical semigroup</h4>
 <aside class="notes">
 <p>
 Другой пример полугруппы - множество целых чисел и определенная на них операция
@@ -455,6 +443,9 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </p>
 
 </aside>
+<p>
+Java
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">MinIntSemigroup</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Semigroup</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
@@ -464,16 +455,40 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 <code><span style="color: #51afef;">}</span></code>
 </code></pre>
 </div>
-
+<p>
+Haskell
+</p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">MinIntSemigroup</span> <span style="color: #dcaeea;">ms</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">MinIntSemigroup</span><span style="color: #51afef;">()</span>;</code>
-<code>ms.apply<span style="color: #51afef;">(</span><span style="color: #da8548; font-weight: bold;">100</span>, ms.apply<span style="color: #c678dd;">(</span><span style="color: #da8548; font-weight: bold;">42</span>, <span style="color: #da8548; font-weight: bold;">512</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Ord</span> a <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Semigroup</span> (<span style="color: #ECBE7B;">Min</span> a) <span style="color: #51afef;">where</span></code>
+<code>   <span style="color: #ECBE7B;">Min</span> a <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Min</span> b <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Min</span> (min a b)</code>
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org1f526f3-split">
+<section id="slide-org6be1c3e-split">
+<p>
+Java
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">MinIntSemigroup</span> <span style="color: #dcaeea;">ms</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">MinIntSemigroup</span><span style="color: #51afef;">()</span>;</code>
+<code>ms.apply<span style="color: #51afef;">(</span><span style="color: #da8548; font-weight: bold;">100</span>, ms.apply<span style="color: #c678dd;">(</span><span style="color: #da8548; font-weight: bold;">42</span>, <span style="color: #da8548; font-weight: bold;">512</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+</code></pre>
+</div>
+
+<p>
+Haskell
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><code trim><code><span style="color: #ECBE7B;">Min</span> <span style="color: #da8548; font-weight: bold;">100</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Min</span> <span style="color: #da8548; font-weight: bold;">42</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Min</span> <span style="color: #da8548; font-weight: bold;">512</span></code>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org1a8b54b">
+<h3 id="org1a8b54b">Reduce</h3>
 <aside class="notes">
 <p>
 Довольно легко написать функцию свертки на списке полугрупп. Со
@@ -481,12 +496,18 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 </p>
 
 </aside>
+<p>
+Java
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">sconcat</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Semigroup</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">semigroup</span>, <span style="color: #ECBE7B;">List</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">list</span><span style="color: #51afef;">)</span></code>
 </code></pre>
 </div>
 
+<p>
+Haskell
+</p>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code><span style="color: #c678dd;">sconcat</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #dcaeea;">=&gt;</span> [a] <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Maybe</span> a</code>
@@ -509,13 +530,13 @@ MinIntSemigroup это оправдано, так как не понятно, ч
 </section>
 </section>
 <section>
-<section id="slide-org5e8e28f">
-<h2 id="org5e8e28f">Monoid</h2>
-<div class="outline-text-2" id="text-org5e8e28f">
+<section id="slide-orgd2a385d">
+<h2 id="orgd2a385d">Monoid</h2>
+<div class="outline-text-2" id="text-orgd2a385d">
 </div>
 </section>
-<section id="slide-orgf59aa56">
-<h3 id="orgf59aa56">Overview</h3>
+<section id="slide-org16f6ede">
+<h3 id="org16f6ede">Overview</h3>
 <aside class="notes">
 <p>
 Моноидом называется множество M, на котором задана бинарная ассоциативная
@@ -534,7 +555,8 @@ e \cdot x = x \cdot e = x
 </p>
 
 </section>
-<section id="slide-orgf59aa56-split">
+<section id="slide-org56d5034">
+<h4 id="org56d5034">Java</h4>
 <aside class="notes">
 <p>
 Выразим это в виде Java интерфейса, расширив интерфейс полугруппы, так как по
@@ -549,7 +571,9 @@ e \cdot x = x \cdot e = x
 <code><span style="color: #51afef;">}</span></code>
 </code></pre>
 </div>
-
+</section>
+<section id="slide-org17e36cd">
+<h4 id="org17e36cd">Haskell</h4>
 <aside class="notes">
 <p>
 И в виде класса типов в Haskell:
@@ -558,14 +582,14 @@ e \cdot x = x \cdot e = x
 </aside>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monoid</span> a <span style="color: #51afef;">where</span></code>
+<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Semigroup</span> a <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monoid</span> a <span style="color: #51afef;">where</span></code>
 <code>  mempty  <span style="color: #dcaeea;">::</span> a</code>
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org038a471">
-<h3 id="org038a471">Examples</h3>
+<section id="slide-org1f3764e">
+<h3 id="org1f3764e">Examples</h3>
 <aside class="notes">
 <p>
 Приведем примеры моноидов:
@@ -573,7 +597,8 @@ e \cdot x = x \cdot e = x
 
 </aside>
 </section>
-<section id="slide-org038a471-split">
+<section id="slide-orge29fc61">
+<h4 id="orge29fc61">String monoid</h4>
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">StringMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
@@ -585,9 +610,12 @@ e \cdot x = x \cdot e = x
 </code></pre>
 </div>
 
+</section>
+<section id="slide-org129c020">
+<h4 id="org129c020">Numeric monoids</h4>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">IntSumMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
+<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">IntSumMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
 <code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #da8548; font-weight: bold;">0</span>; <span style="color: #c678dd;">}</span></code>
 <code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
 <code>        <span style="color: #51afef;">return</span> a + b;</code>
@@ -607,6 +635,9 @@ e \cdot x = x \cdot e = x
 </code></pre>
 </div>
 
+</section>
+<section id="slide-org45ec50a">
+<h3 id="org45ec50a">Reduce</h3>
 <aside class="notes">
 <p>
 И благодаря нейтральному элементу мы можем реализовать функцию свертки без
@@ -615,7 +646,7 @@ e \cdot x = x \cdot e = x
 
 </aside>
 </section>
-<section id="slide-org038a471-split">
+<section id="slide-org45ec50a-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">mconcat</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Monoid</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">monoid</span>, <span style="color: #ECBE7B;">List</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">list</span><span style="color: #51afef;">)</span></code>
@@ -649,10 +680,10 @@ e \cdot x = x \cdot e = x
 </section>
 </section>
 <section>
-<section id="slide-org59705c6">
-<h2 id="org59705c6">Functor</h2>
+<section id="slide-orgecae56b">
+<h2 id="orgecae56b">Functor</h2>
 </section>
-<section id="slide-org59705c6-split">
+<section id="slide-orgecae56b-split">
 <aside class="notes">
 <p>
 Давайте поразмышляем над следующими тремя примерами кода.
@@ -698,10 +729,8 @@ TODO: подобрать примеры получше
 </aside>
 
 </section>
-<section id="slide-orgd681e9f">
-<h3 id="orgd681e9f">Overview</h3>
-</section>
-<section id="slide-orgd681e9f-split">
+<section id="slide-org73e834a">
+<h3 id="org73e834a">Overview</h3>
 <aside class="notes">
 <p>
 По определению из математики функтор — особый тип отображений между категориями.
@@ -755,8 +784,8 @@ TODO: подобрать примеры получше
 </aside>
 
 </section>
-<section id="slide-org241f539">
-<h3 id="org241f539">Laws</h3>
+<section id="slide-org15ceca4">
+<h3 id="org15ceca4">Laws</h3>
 <aside class="notes">
 <p>
 Но этого недостаточно, чтобы определить функтор. Как и в случае с моноидом
@@ -776,7 +805,7 @@ TODO: подобрать примеры получше
 </div>
 
 </section>
-<section id="slide-org241f539-split">
+<section id="slide-org15ceca4-split">
 <aside class="notes">
 <p>
 Запишем их в виде кода.
@@ -821,8 +850,8 @@ Composition Law
 
 </aside>
 </section>
-<section id="slide-orge9df55f">
-<h3 id="orge9df55f">Examles</h3>
+<section id="slide-org1d7ad95">
+<h3 id="org1d7ad95">Examles</h3>
 <aside class="notes">
 <p>
 Рассмотрим самые распространенные примеры функторов.
@@ -831,8 +860,8 @@ Composition Law
 </aside>
 
 </section>
-<section id="slide-orgf69c297">
-<h4 id="orgf69c297">Optional</h4>
+<section id="slide-org2a99933">
+<h4 id="org2a99933">Optional</h4>
 <aside class="notes">
 <p>
 Optional это тип данных, который может либо содержать значение, либо нет.
@@ -882,7 +911,7 @@ Optional это тип данных, который может либо соде
 </div>
 
 </section>
-<section id="slide-orgf69c297-split">
+<section id="slide-org2a99933-split">
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code><span style="color: #ECBE7B;">Maybe</span> a <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Just</span> a</code>
@@ -898,8 +927,8 @@ Optional это тип данных, который может либо соде
 </div>
 
 </section>
-<section id="slide-org8ca6db0">
-<h4 id="org8ca6db0">List</h4>
+<section id="slide-org01439e7">
+<h4 id="org01439e7">List</h4>
 <aside class="notes">
 <p>
 Функтор не обязан содержать только одно значение, например список также является
@@ -936,8 +965,8 @@ Optional это тип данных, который может либо соде
 </div>
 
 </section>
-<section id="slide-orgbfc94c2">
-<h4 id="orgbfc94c2">Promise</h4>
+<section id="slide-org3ebe4bc">
+<h4 id="org3ebe4bc">Promise</h4>
 <aside class="notes">
 <p>
 Определение функтора не накладывает никаких ограничений ни на структуру
@@ -983,8 +1012,8 @@ Optional это тип данных, который может либо соде
 </section>
 </section>
 <section>
-<section id="slide-org3e892c4">
-<h2 id="org3e892c4"><span class="todo TODO">TODO</span> Monad</h2>
+<section id="slide-org7b7bb8e">
+<h2 id="org7b7bb8e"><span class="todo TODO">TODO</span> Monad</h2>
 <aside class="notes">
 <p>
 Функтор удобный и часто используемый паттерн, но в некоторых ситуациях он нам не
@@ -1020,7 +1049,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-org3e892c4-split">
+<section id="slide-org7b7bb8e-split">
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code>(a <span style="color: #dcaeea;">-&gt;</span> b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
@@ -1047,8 +1076,8 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-org8541529">
-<h3 id="org8541529">Overview</h3>
+<section id="slide-orgbc56669">
+<h3 id="orgbc56669">Overview</h3>
 <aside class="notes">
 <p>
 Монада — это общий способ описать идею последовательных вычислений, которые
@@ -1086,13 +1115,13 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-orgf684262">
-<h3 id="orgf684262">Examples</h3>
-<div class="outline-text-3" id="text-orgf684262">
+<section id="slide-org609079d">
+<h3 id="org609079d">Examples</h3>
+<div class="outline-text-3" id="text-org609079d">
 </div>
 </section>
-<section id="slide-orgae3ec2e">
-<h4 id="orgae3ec2e">Optional</h4>
+<section id="slide-org6e04be3">
+<h4 id="org6e04be3">Optional</h4>
 <aside class="notes">
 <p>
 Попробуем написать имплиментацию этого интерфейса для Optional.
@@ -1148,7 +1177,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgae3ec2e-split">
+<section id="slide-org6e04be3-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
@@ -1171,7 +1200,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgae3ec2e-split">
+<section id="slide-org6e04be3-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
@@ -1223,7 +1252,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-orgae3ec2e-split">
+<section id="slide-org6e04be3-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
@@ -1245,7 +1274,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </div>
 
 </section>
-<section id="slide-orgae3ec2e-split">
+<section id="slide-org6e04be3-split">
 <div class="org-src-container">
 
 <pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = person.getPersonalData<span style="color: #51afef;">()</span></code>
@@ -1263,8 +1292,8 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 </aside>
 
 </section>
-<section id="slide-org7732e37">
-<h4 id="org7732e37">Promise</h4>
+<section id="slide-org517f4bc">
+<h4 id="org517f4bc">Promise</h4>
 <aside class="notes">
 <p>
 Давайте посмотрим на функции ниже и подумаем как нам сделать следующее: получить
@@ -1306,8 +1335,8 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-orgd4846fc">
-<h4 id="orgd4846fc">For comprehension</h4>
+<section id="slide-org2db7406">
+<h4 id="org2db7406">For comprehension</h4>
 <aside class="notes">
 <p>
 В Haskell и Scala монады настолько распространены, что существует специальный
@@ -1317,7 +1346,7 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 </section>
-<section id="slide-orgd4846fc-split">
+<section id="slide-org2db7406-split">
 <p>
 Scala:
 </p>
@@ -1356,8 +1385,8 @@ Scala:
 </aside>
 
 </section>
-<section id="slide-orgf5c43ba">
-<h4 id="orgf5c43ba">Either</h4>
+<section id="slide-org1d87ff3">
+<h4 id="org1d87ff3">Either</h4>
 <aside class="notes">
 <p>
 Either - еще одна распространенная монада. Она реализует семантику вычислений
@@ -1410,7 +1439,7 @@ Either - еще одна распространенная монада. Она �
 </div>
 
 </section>
-<section id="slide-orgf5c43ba-split">
+<section id="slide-org1d87ff3-split">
 <aside class="notes">
 <p>
 Предыдущий пример с Promese можно переписать следующим образом:
@@ -1466,8 +1495,8 @@ Scala
 </section>
 </section>
 <section>
-<section id="slide-org9f83bfc">
-<h2 id="org9f83bfc">End</h2>
+<section id="slide-orgb6a9154">
+<h2 id="orgb6a9154">End</h2>
 <aside class="notes">
 <p>
 Абстракции крайне важны. В принципе все чем мы занимаемся в программировании -
@@ -1521,10 +1550,10 @@ alone.
 </section>
 </section>
 <section>
-<section id="slide-orgf3ceb78">
-<h2 id="orgf3ceb78">Trash</h2>
+<section id="slide-org130bc83">
+<h2 id="org130bc83">Trash</h2>
 </section>
-<section id="slide-orgf3ceb78-split">
+<section id="slide-org130bc83-split">
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Functor</span> m <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monad</span> m <span style="color: #51afef;">where</span></code>
