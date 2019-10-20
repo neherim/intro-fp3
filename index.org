@@ -120,8 +120,34 @@ factorial 0 = 1
 factorial n = n * factorial (n - 1)
 #+end_src
 
-** TODO Data
-
+** Data
+#+BEGIN_SRC haskell
+data Bool = False | True
+#+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+data Maybe a = Nothing | Just a
+#+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+data Maybe a = Nothing | Just a
+#+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+data Person = Person Name String Int
+#+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+data Person = Person {
+  name :: Name,
+  address :: String,
+  age :: Int
+  }
+#+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+data DeliveryStatus = Packing | Shipping Int | Delivered
+#+END_SRC
 * Patterns
 #+REVEAL: split
 #+BEGIN_NOTES
@@ -172,6 +198,7 @@ factorial n = n * factorial (n - 1)
 
 #+attr_html: :width 400px; :style border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)
 [[./img/category.png]]
+
 ** Examples of categories
 #+BEGIN_NOTES
 Приведем примеры категорий:
@@ -202,7 +229,7 @@ VectK — категория векторных пространств над п
 #+END_NOTES
 #+attr_html: :width 400px; :style border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)
 [[./img/hask-category.png]]
-* Semigroup
+* Monoid
 #+REVEAL: split
 #+BEGIN_NOTES
 Паттерн проектирования можно определить как часто встречающееся решение
@@ -214,8 +241,8 @@ VectK — категория векторных пространств над п
 #+END_NOTES
 One configuration source
 #+BEGIN_SRC java
-    Config configFromArgs = fromArgs(args);
-    startApplication(configFromArgs);
+Config configFromArgs = fromArgs(args);
+startApplication(configFromArgs);
 #+END_SRC
 #+BEGIN_NOTES
 Теперь добавим возможность конфигурировать приложение через файл. Что теперь мы
@@ -226,10 +253,10 @@ startApplication, то решением может стать некая фун�
 #+REVEAL: split
 Two configuration sources
 #+BEGIN_SRC java
-    Config configFromArgs = fromArgs(args);
-    Config configFromFile = fromFile("config.yml");
-    Config config = combine(configFromFile, configFromArgs);
-    startApplication(config);
+Config configFromArgs = fromArgs(args);
+Config configFromFile = fromFile("config.yml");
+Config config = combine(configFromFile, configFromArgs);
+startApplication(config);
 #+END_SRC
 #+BEGIN_NOTES
 Если источников конфигурации станет больше двух, то мы с легкостью можем написать
@@ -239,10 +266,11 @@ Two configuration sources
 #+REVEAL: split
 Multiple configuration sources
 #+BEGIN_SRC java
-Config config = combineAll(configFromServer,
-                         configFromFile,
-                         configFromSystemEnv,
-                         configFromArgs);
+Config config = combineAll(List.of(configFromServer,
+                                   configFromFile,
+                                   configFromSystemEnv,
+                                   configFromArgs));
+startApplication(config);
 #+END_SRC
 #+BEGIN_NOTES
 Нам даже не важно в каком порядке будут объединяться конфиги, пока сохраняется
@@ -251,8 +279,13 @@ configFromSystemEnv и configFromArgs, потом configFromServer и configFrom
 затем объединить результаты предыдущих объединений. В математике такое свойство
 операции называется ассоциативностью.
 
+Чтобы функция combineAll была определена на пустом списке нам необходим объект,
+который представлял из себя пустой конфиг, иначе функция combineAll будет
+вынуждена возвращать результат типа Optional<Config>, что будет уже не так
+удобно.
+
 Конфиг в примере выше можно заменить на получение и композицию метрик с разных
-серверов или соединение логов с нескольких сервисов. Объединяет их одно -
+серверов или соединение логов с нескольких сервисов. Объединяет их
 функция композиции, со следующей сигнатурой:
 #+END_NOTES
 
@@ -262,137 +295,14 @@ public <T> T apply(T a, T b);
 #+END_SRC
 
 #+BEGIN_NOTES
-Функция принимает два аргумента одного типа и возвращает результат того же типа
-что и аргументы. В общей алгебре множество с заданной на нем ассоциативной бинарной
-операцией называется полугруппой. Математики это определение записывают
+И наличие нейтрального элемента, композиция с которым ничего не меняет.
+#+END_NOTES
+** Overview
+#+REVEAL: split
+#+BEGIN_NOTES
+В общей алгебре множество с заданной на нем ассоциативной бинарной операцией и
+нейтральным элементом называется моноидом. Математики это определение записывают
 следующим образом:
-#+END_NOTES
-** Overview
-#+REVEAL: split
-\begin{multline}
-\shoveleft (G, \cdot : G \times G \rightarrow  G) \\
-\shoveleft (x \cdot y) \cdot z = x \cdot (y \cdot z) \\
-\end{multline}
-
-#+REVEAL: split
-#+BEGIN_NOTES
-Теперь давайте попробуем представить полугруппу в виде Java интерфейса:
-#+END_NOTES
-Java
-#+BEGIN_SRC java
-public interface Semigroup<A> {
-    A apply(A a, A b);
-}
-#+END_SRC
-
-Haskell
-#+BEGIN_SRC haskell
-class Semigroup a where
-  (<>) :: a -> a -> a
-#+END_SRC
-
-** Examples
-*** String semigroup
-#+BEGIN_NOTES
-Приведем несколько примеров полугрупп.
-Первый пример: строки и операция конкатенации.
-#+END_NOTES
-Java
-#+BEGIN_SRC java
-static class StringSemigroup implements Semigroup<String> {
-    public String apply(String x, String y) {
-        return x + y;
-    }
-}
-#+END_SRC
-
-Haskell
-#+BEGIN_SRC haskell
-instance Semigroup String where
-  (<>) = (++)
-#+END_SRC
-
-#+REVEAL: split
-Java
-#+BEGIN_SRC java
-StringSemigroup ss = new StringSemigroup();
-ss.apply("Hello", ss.apply(" ", "World"));
-#+END_SRC
-
-Haskell
-#+BEGIN_SRC haskell
-"Hello" <> " " <> "World"
-#+END_SRC
-
-*** Numerical semigroup
-#+BEGIN_NOTES
-Другой пример полугруппы - множество целых чисел и определенная на них операция
-минимума:
-#+END_NOTES
-Java
-#+BEGIN_SRC java
-class MinIntSemigroup implements Semigroup<Integer> {
-    public Integer apply(Integer a, Integer b) {
-        return a < b ? a : b;
-    }
-}
-#+END_SRC
-Haskell
-#+BEGIN_SRC haskell
-instance Ord a => Semigroup (Min a) where
-   Min a <> Min b = Min (min a b)
-#+END_SRC
-
-#+REVEAL: split
-Java
-#+BEGIN_SRC java
-MinIntSemigroup ms = new MinIntSemigroup();
-ms.apply(100, ms.apply(42, 512));
-#+END_SRC
-
-Haskell
-#+BEGIN_SRC haskell
-Min 100 <> Min 42 <> Min 512
-#+END_SRC
-
-** Reduce
-#+BEGIN_NOTES
-Довольно легко написать функцию свертки на списке полугрупп. Со
-следующей сигнатурой:
-#+END_NOTES
-Java
-#+BEGIN_SRC java
-Optional<T> sconcat(Semigroup<T> semigroup, List<T> list)
-#+END_SRC
-
-Haskell
-#+BEGIN_SRC haskell
-sconcat :: Semigroup a => [a] -> Maybe a
-#+END_SRC
-
-#+BEGIN_NOTES
-Сразу бросается в глаза то, что функция sconcat вынуждена возвращать тип
-Optional, так как мы можем передать в нее пустой список. С полугруппой
-MinIntSemigroup это оправдано, так как не понятно, что нам возвращать в случае
-пустого списка. Но, например, для полугруппы StringSemigroup мы бы могли вернуть
-пустую строку, а в случае с конфигами - пустой конфиг без параметров. Для этого
-нам нужно добавить к бинарной операции еще некий нейтральный элемент и таким
-образом мы получаем моноид.
-#+END_NOTES
-
-#+REVEAL: split
-#+BEGIN_NOTES
-Благодаря ассоциативности операции sconcat мы можем распараллелить операцию
-свертки, так как не важен порядок объединения элементов
-#+END_NOTES
-#+attr_html: :width 400px; :style border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)
-[[./img/monoid-1.png]]
-* Monoid
-** Overview
-#+BEGIN_NOTES
-Моноидом называется множество M, на котором задана бинарная ассоциативная
-операция, и в котором существует нейтральный элемент e, удовлетворяющий
-следующему равенству:
 #+END_NOTES
 
 \begin{multline}
@@ -409,13 +319,15 @@ MinIntSemigroup это оправдано, так как не понятно, ч
 #+END_NOTES
 Java
 #+BEGIN_SRC java
-public interface Monoid<A> extends Semigroup<A> {
+public interface Monoid<A> {
+    A apply(A a, A b);
     A empty();
 }
 #+END_SRC
 Haskell
 #+BEGIN_SRC haskell
-class Semigroup a => Monoid a where
+class Monoid a where
+  (<>)    :: a -> a -> a
   mempty  :: a
 #+END_SRC
 
@@ -433,12 +345,24 @@ class StringMonoid implements Monoid<String> {
     }
 }
 #+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+StringSemigroup ss = new StringSemigroup();
+ss.apply("Hello", ss.apply(" ", "World"));
+#+END_SRC
+
+#+REVEAL: split
 Haskell
 #+BEGIN_SRC haskell
 instance Monoid String where
+  (<>)   = (++)
   mempty = ""
 #+END_SRC
 
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+"Hello" <> " " <> "World"
+#+END_SRC
 *** Numeric monoids
 Java
 #+BEGIN_SRC java
@@ -452,6 +376,7 @@ class IntSumMonoid implements Monoid<Integer> {
 Haskell
 #+BEGIN_SRC haskell
 instance Num a => Monoid (Sum a) where
+  Sum a <> Sum b = Sum (a + b)
   mempty = Sum 0
 #+END_SRC
 
@@ -468,13 +393,13 @@ class IntProdMonoid implements Monoid<Integer> {
 Haskell
 #+BEGIN_SRC haskell
 instance Num a => Monoid (Product a) where
+  Product a <> Product b = Product (a * b)
   mempty = Product 1
 #+END_SRC
 
 ** Reduce
 #+BEGIN_NOTES
-И благодаря нейтральному элементу мы можем реализовать функцию свертки без
-использования типа Optional:
+Достаточно легко реализовать функцию свертки для моноидов:
 #+END_NOTES
 Java
 #+BEGIN_SRC java
@@ -483,8 +408,16 @@ public static <T> T mconcat(Monoid<T> monoid, List<T> list)
 
 Haskell
 #+BEGIN_SRC haskell
-mconcat :: [a] -> a
+mconcat :: Monoid a => [a] -> a
 #+END_SRC
+
+** Reduce
+#+BEGIN_NOTES
+Благодаря ассоциативности мы можем распараллелить операцию свертки, так как не
+важен порядок объединения элементов, пока сохраняется общий порядок.
+#+END_NOTES
+#+attr_html: :width 400px; :style border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)
+[[./img/monoid-1.png]]
 
 #+BEGIN_NOTES
 Поскольку бинарная операция принимает два значения одного типа и в качестве
@@ -498,7 +431,6 @@ mconcat :: [a] -> a
 вводя дополнительных концепций. А ассоциативность этой операции позволяет нам
 разделить применение этой операции по разным потокам или даже разным сервисам.
 #+END_NOTES
-
 * Functor
 #+REVEAL: split
 #+BEGIN_NOTES
@@ -578,8 +510,8 @@ class Functor f where
 
 \begin{multline}
 \shoveleft f : X \rightarrow Y \in C, g : Y \rightarrow Z \in C \\
-\shoveleft F(g \circ f) = F(g) \circ F(f) \\
 \shoveleft F(\text{id}_x)=\text{id}_{F(x)} \\
+\shoveleft F(g \circ f) = F(g) \circ F(f) \\
 \end{multline}
 
 #+REVEAL: split
@@ -648,7 +580,7 @@ class Optional<T> implements Functor<T> {
 }
 #+END_SRC
 
-#+attr_reveal: :frag (roll-in)
+#+REVEAL: split
 #+BEGIN_SRC java
 Optional<Customer> customer = findCustomerByName(name);
 Optional<String> city = customer
@@ -660,10 +592,23 @@ Optional<String> city = customer
 Haskell
 #+BEGIN_SRC haskell
 Maybe a = Nothing | Just a
+#+END_SRC
 
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
 instance Functor Maybe where
     fmap _ Nothing   = Nothing
     fmap f (Just a)  = Just (f a)
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+fmap length (Just "Hello!")
+#+END_SRC
+
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+length <$> Just "Hello!"
 #+END_SRC
 
 *** List
@@ -703,6 +648,15 @@ instance Functor [] where
   fmap = map
 #+END_SRC
 
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+fmap (* 2) [1, 2, 3, 4]
+#+END_SRC
+#+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC haskell
+(* 2) <$> [1, 2, 3, 4]
+#+END_SRC
+
 *** Promise
 #+BEGIN_NOTES
 Определение функтора не накладывает никаких ограничений ни на структуру
@@ -738,6 +692,7 @@ Promise<String> city = customer
 #+END_NOTES
 
 * Monad
+#+REVEAL: split
 #+BEGIN_NOTES
 Функтор удобный и часто используемый паттерн, но в некоторых ситуациях он нам не
 подходит. Например, когда функция трансформации сама возвращает функтор вместо
@@ -763,8 +718,11 @@ Optional<Optional<Manager>> с которым потом не понятно ч�
 #+END_NOTES
 
 #+REVEAL: split
+#+BEGIN_SRC java
+public <B> Functor<B> map(Function<A, B> fn);
+#+END_SRC
 #+BEGIN_SRC haskell
-(a -> b) -> f a -> f b
+fmap :: (a -> b) -> f a -> f b
 #+END_SRC
 
 #+BEGIN_NOTES
@@ -772,8 +730,11 @@ Optional<Optional<Manager>> с которым потом не понятно ч�
 #+END_NOTES
 
 #+attr_reveal: :frag (roll-in)
+#+BEGIN_SRC java
+public <B> Functor<B> flatMap(Function<A, Functor<B>> fn);
+#+END_SRC
 #+BEGIN_SRC haskell
-(a -> f b) -> f a -> f b
+flatMap :: (a -> f b) -> f a -> f b
 #+END_SRC
 
 #+BEGIN_NOTES
@@ -805,7 +766,9 @@ public interface Monad<T, M extends Monad<?, ?>> extends Functor<T> {
 Функцию unit нельзя выразить в Java интерфейсе, будем считать что ее роль будет
 выполнять конструктор класс
 #+END_NOTES
+#+attr_reveal: :frag (roll-in)
 Haskell
+#+attr_reveal: :frag (roll-in)
 #+BEGIN_SRC haskell
 class Functor m => Monad m where
     (>>=)   :: m a -> (a -> m b) -> m b
@@ -814,7 +777,7 @@ class Functor m => Monad m where
 ** Examples
 *** Optional
 #+BEGIN_NOTES
-Попробуем написать имплиментацию этого интерфейса для Optional.
+Попробуем написать имплементацию этого интерфейса для Optional.
 #+END_NOTES
 
 #+BEGIN_LARGE_SRC
@@ -956,8 +919,8 @@ Optional<String> city = person.getPersonalData()
 #+END_NOTES
 #+BEGIN_SRC java
 public Promise<Customer> getCustomerByName(String name) { ... }
-public Promise<Manager> getLocalManager(Address customerAddress) { ... }
-public Promise<Meeting> scheduleMeeting(Manager manager, Customer customer) { ... }
+public Promise<Manager> getLocalManager(Address address) { ... }
+public Promise<Meeting> scheduleMeeting(Manager m, Customer c) { ... }
 #+END_SRC
 
 #+BEGIN_NOTES
@@ -1058,13 +1021,13 @@ public class Either<L, R> implements Monad<R, Either<L, R>> {
 
 #+REVEAL: split
 #+BEGIN_NOTES
-Предыдущий пример с Promese можно переписать следующим образом:
+Предыдущий пример с Promise можно переписать следующим образом:
 #+END_NOTES
 Java
 #+BEGIN_SRC java
-public Either<ServiceError, Customer> getCustomerByName(String name) { ... }
-public Either<ServiceError, Manager> getLocalManager(Address customerAddress) { ... }
-public Either<ServiceError, Meeting> scheduleMeeting(Manager manager, Customer customer) { ... }
+public Either<Err, Customer> getCustomerByName(String name) { ... }
+public Either<Err, Manager> getLocalManager(Address address) { ... }
+public Either<Err, Meeting> scheduleMeeting(Manager m, Customer c) { ... }
 
 Either<ServiceError, Meeting> meeting = getCustomerByName(name)
     .flatMap(customer ->
@@ -1073,7 +1036,7 @@ Either<ServiceError, Meeting> meeting = getCustomerByName(name)
                       scheduleMeeting(manager, customer)));
 #+END_SRC
 #+BEGIN_NOTES
-И снова, как мы видим, поменяв тип с Promise на Ether, основной алгоритм не
+И снова, как мы видим, поменяв тип с Promise на Either, основной алгоритм не
 поменялся, изменился только контекст вычислений. Раньше у нас были вычисления в
 асинхронном контексте, а теперь вычисления с возможной неудачей. Цепочка
 вычислений будет продолжаться пока какая-нибудь из функций не вернет Left
@@ -1095,7 +1058,17 @@ val meeting = for {
   meeting <- scheduleMeeting(manager, customer)
 } yield meeting
 #+END_SRC
-* End
+* Thank you!
+#+REVEAL: split
+#+BEGIN_QUOTE
+Simplicity and elegance are unpopular because they require hard work and
+discipline to achieve and education to be appreciated.
+
+And to make matters worse: complexity sells better.
+
+--- Edsger Dijkstra
+#+END_QUOTE
+
 #+BEGIN_NOTES
 Абстракции крайне важны. В принципе все чем мы занимаемся в программировании -
 это проектирование абстракций и взаимодействий между ними. К признакам хороших
