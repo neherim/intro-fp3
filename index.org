@@ -1,9 +1,11 @@
 #+REVEAL_EXTRA_CSS: ./css/local.css
 #+REVEAL_EXTRA_CSS: ./css/ember.css
 #+REVEAL_TRANS: fade
-#+REVEAL_PLUGINS: (notes)
-#+REVEAL_ROOT: ./reveal.js-3.8.0
+#+REVEAL_PLUGINS: (notes highlight)
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
 #+REVEAL_DEFAULT_FRAG_STYLE: roll-in
+#+REVEAL_HLEVEL: 0
+#+REVEAL_THEME: none
 #+OPTIONS: toc:nil num:nil reveal_slide_number:nil author:nil date:nil timestamp:nil
 #+OPTIONS: reveal_width:1200 reveal_height:800
 #+TITLE: Functional Programming Patterns

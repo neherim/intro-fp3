@@ -3,39 +3,29 @@
 <head>
 <meta charset="utf-8"/>
 <title>Functional Programming Patterns</title>
-<meta name="author" content="(Артем)"/>
+<meta name="author" content="Artem Mikhailovskii"/>
 <style type="text/css">
 .underline { text-decoration: underline; }
 </style>
-<link rel="stylesheet" href="./reveal.js-3.8.0/css/reveal.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.css"/>
 
-<link rel="stylesheet" href="./reveal.js-3.8.0/css/theme/moon.css" id="theme"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/none.css" id="theme"/>
 
 <link rel="stylesheet" href="./css/local.css"/>
 
 <link rel="stylesheet" href="./css/ember.css"/>
-
-<!-- If the query includes 'print-pdf', include the PDF print sheet -->
-<script>
-    if( window.location.search.match( /print-pdf/gi ) ) {
-        var link = document.createElement( 'link' );
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = './reveal.js-3.8.0/css/print/pdf.css';
-        document.getElementsByTagName( 'head' )[0].appendChild( link );
-    }
-</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/plugin/highlight/zenburn.css"/>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <body>
 <div class="reveal">
 <div class="slides">
-<section id="sec-title-slide"><h1 class="title">Functional Programming Patterns</h1>
+<section id="sec-title-slide">
+<h1 class="title">Functional Programming Patterns</h1>
 </section>
 
-<section>
-<section id="slide-org275e72e">
-<h2 id="org275e72e">Learn Haskell in 10 minutes</h2>
+<section id="slide-org4394f63">
+<h2 id="org4394f63">Learn Haskell in 10 minutes</h2>
 <aside class="notes">
 <p>
 Haskell чистый функциональный язык программирования общего назначения c ленивой моделью вычисления.
@@ -76,125 +66,119 @@ Future и возвращать ее в `main` методе, который уж�
 
 </aside>
 </section>
-<section id="slide-org413dd65">
-<h3 id="org413dd65">Lists</h3>
+<section id="slide-org66b82ba">
+<h3 id="org66b82ba">Lists</h3>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">++</span> <span style="color: #98be65;">", World!"</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">"Hello world!"</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >"Hello" ++ ", World!" -- "Hello world!"
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">5</span>] <span style="color: #dcaeea;">==</span> [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>, <span style="color: #da8548; font-weight: bold;">5</span>]</code>
+<pre class="fragment (roll-in)"><code class="haskell" >[1..5] == [1, 2, 3, 4, 5]
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #98be65;">'A'</span><span style="color: #dcaeea;">..</span><span style="color: #98be65;">'F'</span>] <span style="color: #dcaeea;">==</span> <span style="color: #98be65;">"ABCDEF"</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >['A'..'F'] == "ABCDEF"
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span>]</code>
+<pre class="fragment (roll-in)"><code class="haskell" >[1..]
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>[<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">3</span>] <span style="color: #dcaeea;">++</span> [<span style="color: #da8548; font-weight: bold;">4</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">6</span>] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[1, 2, 3, 4, 5, 6]</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >[1..3] ++ [4..6] -- [1, 2, 3, 4, 5, 6]
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #ECBE7B;">:</span> [<span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[1, 2, 3, 4]</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >[x*2 | x &lt;- [1..5]] -- [2, 4, 6, 8, 10]
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>[x<span style="color: #dcaeea;">*</span><span style="color: #da8548; font-weight: bold;">2</span> <span style="color: #dcaeea;">|</span> x <span style="color: #dcaeea;">&lt;-</span> [<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">5</span>]] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[2, 4, 6, 8, 10]</span></code>
-</code></pre>
-</div>
-
-<div class="org-src-container">
-
-<pre  class="fragment (roll-in)"><code trim><code>[(x, y) <span style="color: #dcaeea;">|</span> x <span style="color: #dcaeea;">&lt;-</span> [<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">3</span>], y <span style="color: #dcaeea;">&lt;-</span> [<span style="color: #da8548; font-weight: bold;">1</span><span style="color: #dcaeea;">..</span><span style="color: #da8548; font-weight: bold;">3</span>], x <span style="color: #dcaeea;">+</span> y <span style="color: #dcaeea;">&gt;</span> <span style="color: #da8548; font-weight: bold;">4</span>] <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">[(2,3), (3,2), (3,3)]</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >[(x, y) | x &lt;- [1..3], y &lt;- [1..3], x + y &gt; 4] -- [(2,3), (3,2), (3,3)]
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgb70fd60">
-<h3 id="orgb70fd60">Functions</h3>
+<section id="slide-org60bf7fe">
+<h3 id="org60bf7fe">Functions</h3>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">add</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
-<code><span style="color: #c678dd;">add</span> a b <span style="color: #dcaeea;">=</span> a <span style="color: #dcaeea;">+</span> b</code>
+<pre class="fragment (roll-in)"><code class="haskell" >add :: Integer -&gt; Integer -&gt; Integer
+add a b = a + b
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">add</span> <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #da8548; font-weight: bold;">3</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">4</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >add 1 3 -- 4
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">addOne</span> <span style="color: #dcaeea;">=</span> add <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">:: Integer -&gt; Integer</span></code>
-<code></code>
-<code><span style="color: #c678dd;">addOne</span> <span style="color: #da8548; font-weight: bold;">4</span> <span style="color: #5B6268;">-- </span><span style="color: #5B6268;">5</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >addOne = add 1 -- :: Integer -&gt; Integer
+
+addOne 4 -- 5
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">main</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">IO</span> <span style="color: #ECBE7B;">()</span></code>
-<code><span style="color: #c678dd;">main</span> <span style="color: #dcaeea;">=</span> putStrLn <span style="color: #98be65;">"Hello, World!"</span></code>
-</code></pre>
-</div>
-
-</section>
-<section id="slide-org509e276">
-<h3 id="org509e276">Controls</h3>
-<div class="org-src-container">
-
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">factorial</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
-<code><span style="color: #c678dd;">factorial</span> n <span style="color: #dcaeea;">=</span> <span style="color: #51afef;">if</span> n <span style="color: #dcaeea;">&lt;</span> <span style="color: #da8548; font-weight: bold;">2</span></code>
-<code>              <span style="color: #51afef;">then</span> <span style="color: #da8548; font-weight: bold;">1</span></code>
-<code>              <span style="color: #51afef;">else</span> n <span style="color: #dcaeea;">*</span> factorial (n <span style="color: #dcaeea;">-</span> <span style="color: #da8548; font-weight: bold;">1</span>)</code>
-</code></pre>
-</div>
-
-<div class="org-src-container">
-
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">factorial</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">-&gt;</span> <span style="color: #ECBE7B;">Integer</span></code>
-<code><span style="color: #c678dd;">factorial</span> <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #dcaeea;">=</span> <span style="color: #da8548; font-weight: bold;">1</span></code>
-<code><span style="color: #c678dd;">factorial</span> n <span style="color: #dcaeea;">=</span> n <span style="color: #dcaeea;">*</span> factorial (n <span style="color: #dcaeea;">-</span> <span style="color: #da8548; font-weight: bold;">1</span>)</code>
+<pre class="fragment (roll-in)"><code class="haskell" >main :: IO ()
+main = putStrLn "Hello, World!"
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgb11e7e8">
-<h3 id="orgb11e7e8">Data</h3>
+<section id="slide-orgda9ab82">
+<h3 id="orgda9ab82">Controls</h3>
+<div class="org-src-container">
+
+<pre class="fragment (roll-in)"><code class="haskell" >factorial :: Integer -&gt; Integer
+factorial n = if n &lt; 2
+              then 1
+              else n * factorial (n - 1)
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (roll-in)"><code class="haskell" >factorial :: Integer -&gt; Integer
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org8bb6992">
+<h3 id="org8bb6992">Data</h3>
 <p>
 Products
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">data</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #ECBE7B;">Name</span> <span style="color: #ECBE7B;">String</span> <span style="color: #ECBE7B;">Int</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >data Person = Person Name String Int
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">data</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Person</span> {</code>
-<code>  name <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Name</span>,</code>
-<code>  address <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">String</span>,</code>
-<code>  age <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Int</span></code>
-<code>  }</code>
+<pre class="fragment (roll-in)"><code class="haskell" >data Person = Person {
+  name :: Name,
+  address :: String,
+  age :: Int
+  }
 </code></pre>
 </div>
 <p class="fragment (roll-in)">
@@ -202,36 +186,34 @@ Sum
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">data</span> <span style="color: #ECBE7B;">Bool</span> <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">False</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">True</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >data Bool = False | True
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">data</span> <span style="color: #ECBE7B;">Maybe</span> a <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Just</span> a</code>
+<pre class="fragment (roll-in)"><code class="haskell" >data Maybe a = Nothing | Just a
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">data</span> <span style="color: #ECBE7B;">Error</span> err a <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Error</span> err <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Result</span> a</code>
+<pre class="fragment (roll-in)"><code class="haskell" >data Error err a = Error err | Result a
 </code></pre>
 </div>
 </section>
-<section id="slide-orgb11e7e8-split">
+<section>
 <p>
 Algebraic Data Types
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">data</span> <span style="color: #ECBE7B;">DeliveryStatus</span> <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Packing</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Shipping</span> <span style="color: #ECBE7B;">Int</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Delivered</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >data DeliveryStatus = Packing | Shipping Int | Delivered
 </code></pre>
 </div>
 </section>
+<section id="slide-orgdd5919f">
+<h2 id="orgdd5919f">Patterns</h2>
 </section>
 <section>
-<section id="slide-orgec85cfc">
-<h2 id="orgec85cfc">Patterns</h2>
-</section>
-<section id="slide-orgec85cfc-split">
 <aside class="notes">
 <p>
 Функциональное программирование часто критикуют за использование математического
@@ -250,7 +232,7 @@ Algebraic Data Types
 
 </aside>
 
-<div class="LEFTCOL">
+<div class="LEFTCOL" id="org3970585">
 <ul>
 <li>Semigroup</li>
 <li>Monoid</li>
@@ -262,7 +244,7 @@ Algebraic Data Types
 
 </div>
 
-<div class="RIGHTCOL">
+<div class="RIGHTCOL" id="org334a5bc">
 <ul>
 <li class="fragment roll-in">Appendable</li>
 <li class="fragment roll-in">Aggregatable</li>
@@ -274,10 +256,8 @@ Algebraic Data Types
 
 </div>
 </section>
-</section>
-<section>
-<section id="slide-orgd5b09fb">
-<h2 id="orgd5b09fb">Category theory</h2>
+<section id="slide-org3db46d0">
+<h2 id="org3db46d0">Category theory</h2>
 <aside class="notes">
 <p>
 Теория категорий — раздел математики, изучающий свойства отношений между
@@ -288,8 +268,8 @@ Algebraic Data Types
 
 </aside>
 </section>
-<section id="slide-org300a2d4">
-<h3 id="org300a2d4">Category</h3>
+<section id="slide-org4c3701b">
+<h3 id="org4c3701b">Category</h3>
 <aside class="notes">
 <p>
 Категория - это набор объектов и стрелок (морфизмов) между ними. В общем случае
@@ -303,14 +283,14 @@ Algebraic Data Types
 </aside>
 
 
-<div class="figure">
+<div id="org6603f32" class="figure">
 <p><img src="./img/category.png" alt="category.png" width="400px;" style="border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)" />
 </p>
 </div>
 
 </section>
-<section id="slide-org70ef7b6">
-<h3 id="org70ef7b6">Examples of categories</h3>
+<section id="slide-orga336d27">
+<h3 id="orga336d27">Examples of categories</h3>
 <aside class="notes">
 <p>
 Приведем примеры категорий:
@@ -371,8 +351,8 @@ VectK — категория векторных пространств над п
 </table>
 
 </section>
-<section id="slide-org5410235">
-<h3 id="org5410235">Hask category</h3>
+<section id="slide-org2572e0e">
+<h3 id="org2572e0e">Hask category</h3>
 <aside class="notes">
 <p>
 Композиция лежит в основе теории категорий, так же она лежит в основе
@@ -387,17 +367,15 @@ VectK — категория векторных пространств над п
 
 </aside>
 
-<div class="figure">
+<div id="orgf2ac238" class="figure">
 <p><img src="./img/hask-category.png" alt="hask-category.png" width="400px;" style="border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)" />
 </p>
 </div>
 </section>
+<section id="slide-orgac7cabd">
+<h2 id="orgac7cabd">Monoid</h2>
 </section>
 <section>
-<section id="slide-org2a6c735">
-<h2 id="org2a6c735">Monoid</h2>
-</section>
-<section id="slide-org2a6c735-split">
 <aside class="notes">
 <p>
 Паттерн проектирования можно определить как часто встречающееся решение
@@ -416,12 +394,12 @@ One configuration source
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
-<code>startApplication<span style="color: #51afef;">(</span>configFromArgs<span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >Config configFromArgs = fromArgs(args);
+startApplication(configFromArgs);
 </code></pre>
 </div>
 </section>
-<section id="slide-org2a6c735-split">
+<section>
 <aside class="notes">
 <p>
 Теперь добавим возможность конфигурировать приложение через файл. Что теперь мы
@@ -436,14 +414,14 @@ Two configuration sources
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromArgs</span> = fromArgs<span style="color: #51afef;">(</span>args<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">configFromFile</span> = fromFile<span style="color: #51afef;">(</span><span style="color: #98be65;">"config.yml"</span><span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">config</span> = combine<span style="color: #51afef;">(</span>configFromFile, configFromArgs<span style="color: #51afef;">)</span>;</code>
-<code>startApplication<span style="color: #51afef;">(</span>config<span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >Config configFromArgs = fromArgs(args);
+Config configFromFile = fromFile("config.yml");
+Config config = combine(configFromFile, configFromArgs);
+startApplication(config);
 </code></pre>
 </div>
 </section>
-<section id="slide-org2a6c735-split">
+<section>
 <aside class="notes">
 <p>
 Если источников конфигурации станет больше двух, то мы с легкостью можем написать
@@ -472,16 +450,16 @@ Multiple configuration sources
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Config</span> <span style="color: #dcaeea;">config</span> = combineAll<span style="color: #51afef;">(</span>List.of<span style="color: #c678dd;">(</span>configFromServer,</code>
-<code>                                   configFromFile,</code>
-<code>                                   configFromSystemEnv,</code>
-<code>                                   configFromArgs<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
-<code>startApplication<span style="color: #51afef;">(</span>config<span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >Config config = combineAll(List.of(configFromServer,
+                                   configFromFile,
+                                   configFromSystemEnv,
+                                   configFromArgs));
+startApplication(config);
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org2a6c735-split">
+<section>
 <aside class="notes">
 <p>
 Конфиг в примере выше можно заменить на получение и композицию метрик с разных
@@ -493,14 +471,14 @@ Multiple configuration sources
 </aside>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">apply</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">b</span><span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >public &lt;T&gt; T apply(T a, T b);
 </code></pre>
 </div>
 </section>
-<section id="slide-orgf5ec030">
-<h3 id="orgf5ec030">Overview</h3>
+<section id="slide-org0214ed7">
+<h3 id="org0214ed7">Overview</h3>
 </section>
-<section id="slide-orgf5ec030-split">
+<section>
 <aside class="notes">
 <p>
 В общей алгебре множество с заданной на нем ассоциативной бинарной операцией и
@@ -520,7 +498,7 @@ Multiple configuration sources
 </div>
 
 </section>
-<section id="slide-orgf5ec030-split">
+<section>
 <aside class="notes">
 <p>
 С точки зрения теории категорий моноид это просто категория состоящая из одного
@@ -534,10 +512,10 @@ Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #ECBE7B;">A</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">A</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">A</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span>;</code>
-<code>    <span style="color: #ECBE7B;">A</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >public interface Monoid&lt;A&gt; {
+    A apply(A a, A b);
+    A empty();
+}
 </code></pre>
 </div>
 <p class="fragment (roll-in)">
@@ -545,15 +523,15 @@ Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Monoid</span> a <span style="color: #51afef;">where</span></code>
-<code>  (<span style="color: #dcaeea;">&lt;&gt;</span>)    <span style="color: #dcaeea;">::</span> a <span style="color: #dcaeea;">-&gt;</span> a <span style="color: #dcaeea;">-&gt;</span> a</code>
-<code>  mempty  <span style="color: #dcaeea;">::</span> a</code>
+<pre class="fragment (roll-in)"><code class="haskell" >class Monoid a where
+  (&lt;&gt;)    :: a -&gt; a -&gt; a
+  mempty  :: a
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgef48f93">
-<h3 id="orgef48f93">Examples</h3>
+<section id="slide-orgb7b7fc0">
+<h3 id="orgb7b7fc0">Examples</h3>
 <aside class="notes">
 <p>
 Приведем примеры моноидов:
@@ -561,127 +539,127 @@ Haskell
 
 </aside>
 </section>
-<section id="slide-orgd646218">
-<h4 id="orgd646218">String monoid</h4>
+<section id="slide-org2cbbd1c">
+<h4 id="org2cbbd1c">String monoid</h4>
 <p>
 Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">StringMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">String</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #98be65;">""</span>; <span style="color: #c678dd;">}</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">String</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> a + b;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class StringMonoid implements Monoid&lt;String&gt; {
+    public String empty() { return ""; }
+    public String apply(String a, String b) {
+        return a + b;
+    }
+}
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">StringMonoid</span> <span style="color: #dcaeea;">m</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">StringMonoid</span><span style="color: #51afef;">()</span>;</code>
-<code>m.apply<span style="color: #51afef;">(</span><span style="color: #98be65;">"Hello"</span>, m.apply<span style="color: #c678dd;">(</span><span style="color: #98be65;">" "</span>, <span style="color: #98be65;">"World"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >StringMonoid m = new StringMonoid();
+m.apply("Hello", m.apply(" ", "World"));
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgd646218-split">
+<section>
 <p>
 Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Monoid</span> <span style="color: #ECBE7B;">String</span> <span style="color: #51afef;">where</span></code>
-<code>  (<span style="color: #dcaeea;">&lt;&gt;</span>)   <span style="color: #dcaeea;">=</span> (<span style="color: #dcaeea;">++</span>)</code>
-<code>  mempty <span style="color: #dcaeea;">=</span> <span style="color: #98be65;">""</span></code>
+<pre><code class="haskell" >instance Monoid String where
+  (&lt;&gt;)   = (++)
+  mempty = ""
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #98be65;">"Hello"</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">" "</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #98be65;">"World"</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >"Hello" &lt;&gt; " " &lt;&gt; "World"
 </code></pre>
 </div>
 </section>
-<section id="slide-org8ca5700">
-<h4 id="org8ca5700">Numeric monoids</h4>
+<section id="slide-org4a91c16">
+<h4 id="org4a91c16">Numeric monoids</h4>
 <p>
 Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">IntSumMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #da8548; font-weight: bold;">0</span>; <span style="color: #c678dd;">}</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> a + b;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class IntSumMonoid implements Monoid&lt;Integer&gt; {
+    public Integer empty() { return 0; }
+    public Integer apply(Integer a, Integer b) {
+        return a + b;
+    }
+}
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">IntSumMonoid</span> <span style="color: #dcaeea;">m</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">IntSumMonoid</span><span style="color: #51afef;">()</span>;</code>
-<code>m.apply<span style="color: #51afef;">(</span><span style="color: #da8548; font-weight: bold;">10</span>, m.apply<span style="color: #c678dd;">(</span><span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >IntSumMonoid m = new IntSumMonoid();
+m.apply(10, m.apply(2, 3));
 </code></pre>
 </div>
 </section>
-<section id="slide-org8ca5700-split">
+<section>
 <p>
 Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Num</span> a <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monoid</span> (<span style="color: #ECBE7B;">Sum</span> a) <span style="color: #51afef;">where</span></code>
-<code>  <span style="color: #ECBE7B;">Sum</span> a <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Sum</span> b <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Sum</span> (a <span style="color: #dcaeea;">+</span> b)</code>
-<code>  mempty <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Sum</span> <span style="color: #da8548; font-weight: bold;">0</span></code>
+<pre><code class="haskell" >instance Num a =&gt; Monoid (Sum a) where
+  Sum a &lt;&gt; Sum b = Sum (a + b)
+  mempty = Sum 0
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Sum</span> <span style="color: #da8548; font-weight: bold;">10</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Sum</span> <span style="color: #da8548; font-weight: bold;">2</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Sum</span> <span style="color: #da8548; font-weight: bold;">3</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >Sum 10 &lt;&gt; Sum 2 &lt;&gt; Sum 3
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org8ca5700-split">
+<section>
 <p>
 Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">IntProdMonoid</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monoid</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Integer</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">return</span> <span style="color: #da8548; font-weight: bold;">1</span>; <span style="color: #c678dd;">}</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Integer</span> <span style="color: #c678dd;">apply</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">a</span>, <span style="color: #ECBE7B;">Integer</span> <span style="color: #dcaeea;">b</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> a * b;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class IntProdMonoid implements Monoid&lt;Integer&gt; {
+    public Integer empty() { return 1; }
+    public Integer apply(Integer a, Integer b) {
+        return a * b;
+    }
+}
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">IntProdMonoid</span> <span style="color: #dcaeea;">m</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">IntProdMonoid</span><span style="color: #51afef;">()</span>;</code>
-<code>m.apply<span style="color: #51afef;">(</span><span style="color: #da8548; font-weight: bold;">10</span>, m.apply<span style="color: #c678dd;">(</span><span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >IntProdMonoid m = new IntProdMonoid();
+m.apply(10, m.apply(2, 3));
 </code></pre>
 </div>
 </section>
-<section id="slide-org8ca5700-split">
+<section>
 <p>
 Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Num</span> a <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monoid</span> (<span style="color: #ECBE7B;">Product</span> a) <span style="color: #51afef;">where</span></code>
-<code>  <span style="color: #ECBE7B;">Product</span> a <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Product</span> b <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Product</span> (a <span style="color: #dcaeea;">*</span> b)</code>
-<code>  mempty <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Product</span> <span style="color: #da8548; font-weight: bold;">1</span></code>
+<pre><code class="haskell" >instance Num a =&gt; Monoid (Product a) where
+  Product a &lt;&gt; Product b = Product (a * b)
+  mempty = Product 1
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Product</span> <span style="color: #da8548; font-weight: bold;">10</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Product</span> <span style="color: #da8548; font-weight: bold;">2</span> <span style="color: #dcaeea;">&lt;&gt;</span> <span style="color: #ECBE7B;">Product</span> <span style="color: #da8548; font-weight: bold;">3</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >Product 10 &lt;&gt; Product 2 &lt;&gt; Product 3
 </code></pre>
 </div>
 </section>
-<section id="slide-org7f7cbfb">
-<h3 id="org7f7cbfb">Reduce</h3>
+<section id="slide-orgd50af5e">
+<h3 id="orgd50af5e">Reduce</h3>
 <aside class="notes">
 <p>
 Достаточно легко реализовать функцию свертки для моноидов:
@@ -693,7 +671,7 @@ Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">T</span> <span style="color: #c678dd;">mconcat</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Monoid</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">monoid</span>, <span style="color: #ECBE7B;">List</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">list</span><span style="color: #51afef;">)</span></code>
+<pre><code class="java" >public static &lt;T&gt; T mconcat(Monoid&lt;T&gt; monoid, List&lt;T&gt; list)
 </code></pre>
 </div>
 
@@ -702,13 +680,13 @@ Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">mconcat</span> <span style="color: #dcaeea;">::</span> <span style="color: #ECBE7B;">Monoid</span> a <span style="color: #dcaeea;">=&gt;</span> [a] <span style="color: #dcaeea;">-&gt;</span> a</code>
+<pre class="fragment (roll-in)"><code class="haskell" >mconcat :: Monoid a =&gt; [a] -&gt; a
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org5dfa9de">
-<h3 id="org5dfa9de">Reduce</h3>
+<section id="slide-org64f05bd">
+<h3 id="org64f05bd">Reduce</h3>
 <aside class="notes">
 <p>
 Благодаря ассоциативности мы можем распараллелить операцию свертки, так как не
@@ -732,17 +710,15 @@ Haskell
 
 </aside>
 
-<div class="figure">
+<div id="org9062f91" class="figure">
 <p><img src="./img/monoid-1.png" alt="monoid-1.png" width="400px;" style="border:0px; box-shadow: 0 0 0px rgba(0, 0, 0, 0)" />
 </p>
 </div>
 </section>
+<section id="slide-org84facac">
+<h2 id="org84facac">Functor</h2>
 </section>
 <section>
-<section id="slide-orgd2308d6">
-<h2 id="orgd2308d6">Functor</h2>
-</section>
-<section id="slide-orgd2308d6-split">
 <aside class="notes">
 <p>
 Давайте поразмышляем над следующими тремя примерами кода.
@@ -754,35 +730,35 @@ Haskell
 
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = <span style="color: #a9a1e1;">null</span>;</code>
-<code><span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span>customer != <span style="color: #a9a1e1;">null</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span></code>
-<code>    city = customer.getAddress<span style="color: #c678dd;">()</span>.getCity<span style="color: #c678dd;">()</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >Customer customer = findCustomerByName(name);
+String city = null;
+if (customer != null) {
+    city = customer.getAddress().getCity();
+}
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">List</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customers</span> = findAllCustomers<span style="color: #51afef;">()</span>;</code>
-<code><span style="color: #ECBE7B;">List</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">cities</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">ArrayList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;()</span>;</code>
-<code><span style="color: #51afef;">for</span> <span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">customer</span> : customers<span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = customer.getAddress<span style="color: #c678dd;">()</span>.getCity<span style="color: #c678dd;">()</span>;</code>
-<code>    cities.add<span style="color: #c678dd;">(</span>city<span style="color: #c678dd;">)</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre class="fragment (roll-in)"><code class="java" >List&lt;Customer&gt; customers = findAllCustomers();
+List&lt;String&gt; cities = new ArrayList&lt;String&gt;();
+for (Customer customer : customers) {
+    String city = customer.getAddress().getCity();
+    cities.add(city);
+}
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Future</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = customer.get<span style="color: #51afef;">()</span>.getAddress<span style="color: #51afef;">()</span>.getCity<span style="color: #51afef;">()</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >Future&lt;Customer&gt; customer = findCustomerByName(name);
+String city = customer.get().getAddress().getCity();
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org724ad57">
-<h3 id="org724ad57">Overview</h3>
+<section id="slide-org9f78dea">
+<h3 id="org9f78dea">Overview</h3>
 <aside class="notes">
 <p>
 По определению из математики функтор — особый тип отображений между категориями.
@@ -817,9 +793,9 @@ Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">A</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> map<span style="color: #c678dd;">(</span>Function&lt;<span style="color: #ECBE7B;">A</span>, B&gt; fn<span style="color: #c678dd;">)</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >interface Functor&lt;A&gt; {
+    &lt;B&gt; Functor&lt;B&gt; map(Function&lt;A, B&gt; fn);
+}
 </code></pre>
 </div>
 
@@ -828,14 +804,14 @@ Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Functor</span> f <span style="color: #51afef;">where</span></code>
-<code>  fmap <span style="color: #dcaeea;">::</span> (a <span style="color: #dcaeea;">-&gt;</span> b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
+<pre class="fragment (roll-in)"><code class="haskell" >class Functor f where
+  fmap :: (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgfdee112">
-<h3 id="orgfdee112">Laws</h3>
+<section id="slide-org17fb8cf">
+<h3 id="org17fb8cf">Laws</h3>
 <aside class="notes">
 <p>
 Но этого недостаточно, чтобы определить функтор. Как и в случае с моноидом
@@ -855,7 +831,7 @@ Haskell
 </div>
 
 </section>
-<section id="slide-orgfdee112-split">
+<section>
 <aside class="notes">
 <p>
 Запишем их в виде кода.
@@ -877,7 +853,7 @@ Identity Law
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>functor.map<span style="color: #51afef;">(</span>x -&gt; x<span style="color: #51afef;">)</span> == functor</code>
+<pre class="fragment (roll-in)"><code class="java" >functor.map(x -&gt; x) == functor
 </code></pre>
 </div>
 
@@ -886,12 +862,12 @@ Composition Law
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>functor.map<span style="color: #51afef;">(</span>x -&gt; f<span style="color: #c678dd;">(</span>g<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> == functor.map<span style="color: #51afef;">(</span>g<span style="color: #51afef;">)</span>.map<span style="color: #51afef;">(</span>f<span style="color: #51afef;">)</span></code>
+<pre class="fragment (roll-in)"><code class="java" >functor.map(x -&gt; f(g(x))) == functor.map(g).map(f)
 </code></pre>
 </div>
 </section>
-<section id="slide-org6f8e5bc">
-<h3 id="org6f8e5bc">Examles</h3>
+<section id="slide-org66d4f1b">
+<h3 id="org66d4f1b">Examles</h3>
 <aside class="notes">
 <p>
 Рассмотрим самые распространенные примеры функторов.
@@ -900,8 +876,8 @@ Composition Law
 </aside>
 
 </section>
-<section id="slide-orgc9e8ad6">
-<h4 id="orgc9e8ad6">Optional</h4>
+<section id="slide-orgeb44f92">
+<h4 id="orgeb44f92">Optional</h4>
 <aside class="notes">
 <p>
 Optional это тип данных, который может либо содержать значение, либо нет.
@@ -915,77 +891,77 @@ Optional это тип данных, который может либо соде
 
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span>;</code>
-<code></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #c678dd;">Optional</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">this</span>.value = value;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #a9a1e1;">@Override</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>value == <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
-<code>            <span style="color: #51afef;">return</span> empty<span style="color: #98be65;">()</span>;</code>
-<code>        <span style="color: #51afef;">else</span></code>
-<code>            <span style="color: #51afef;">return</span> of<span style="color: #98be65;">(</span>f.apply<span style="color: #51afef;">(</span>value<span style="color: #51afef;">)</span><span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">of</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #98be65;">&gt;(</span>a<span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #98be65;">&gt;(</span><span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class Optional&lt;T&gt; implements Functor&lt;T&gt; {
+    private final T value;
+
+    private Optional(T value) {
+        this.value = value;
+    }
+
+    @Override
+    public &lt;R&gt; Optional&lt;R&gt; map(Function&lt;T, R&gt; f) {
+        if (value == null)
+            return empty();
+        else
+            return of(f.apply(value));
+    }
+
+    public static &lt;T&gt; Optional&lt;T&gt; of(T a) {
+        return new Optional&lt;T&gt;(a);
+    }
+
+    public static &lt;T&gt; Optional&lt;T&gt; empty() {
+        return new Optional&lt;T&gt;(null);
+    }
+}
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgc9e8ad6-split">
+<section>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = customer</code>
-<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >Optional&lt;Customer&gt; customer = findCustomerByName(name);
+Optional&lt;String&gt; city = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity);
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgc9e8ad6-split">
+<section>
 <p>
 Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-haskell"><code trim><code><span style="color: #ECBE7B;">Maybe</span> a <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span> <span style="color: #dcaeea;">|</span> <span style="color: #ECBE7B;">Just</span> a</code>
+<pre><code class="haskell" >Maybe a = Nothing | Just a
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Functor</span> <span style="color: #ECBE7B;">Maybe</span> <span style="color: #51afef;">where</span></code>
-<code>    fmap <span style="color: #51afef;">_</span> <span style="color: #ECBE7B;">Nothing</span>   <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Nothing</span></code>
-<code>    fmap f (<span style="color: #ECBE7B;">Just</span> a)  <span style="color: #dcaeea;">=</span> <span style="color: #ECBE7B;">Just</span> (f a)</code>
+<pre class="fragment (roll-in)"><code class="haskell" >instance Functor Maybe where
+    fmap _ Nothing   = Nothing
+    fmap f (Just a)  = Just (f a)
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">fmap</span> length (<span style="color: #ECBE7B;">Just</span> <span style="color: #98be65;">"Hello!"</span>)</code>
+<pre class="fragment (roll-in)"><code class="haskell" >fmap length (Just "Hello!")
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>length <span style="color: #c678dd;">&lt;$&gt;</span> <span style="color: #ECBE7B;">Just</span> <span style="color: #98be65;">"Hello!"</span></code>
+<pre class="fragment (roll-in)"><code class="haskell" >length &lt;$&gt; Just "Hello!"
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgf073df6">
-<h4 id="orgf073df6">List</h4>
+<section id="slide-org9e797ba">
+<h4 id="org9e797ba">List</h4>
 <aside class="notes">
 <p>
 Функтор не обязан содержать только одно значение, например список также является
@@ -997,56 +973,56 @@ Haskell
 </aside>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">FList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">ArrayList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code></code>
-<code>    <span style="color: #a9a1e1;">@Override</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">FList</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #ECBE7B;">FList</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">result</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">FList</span><span style="color: #98be65;">&lt;&gt;()</span>;</code>
-<code>        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i &lt; <span style="color: #ECBE7B;">size</span><span style="color: #51afef;">()</span>; i++<span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span></code>
-<code>            <span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">newElement</span> = f.apply<span style="color: #51afef;">(</span>get<span style="color: #c678dd;">(</span>i<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
-<code>            result.add<span style="color: #51afef;">(</span>newElement<span style="color: #51afef;">)</span>;</code>
-<code>        <span style="color: #98be65;">}</span></code>
-<code>        <span style="color: #51afef;">return</span> result;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class FList&lt;T&gt; extends ArrayList&lt;T&gt; implements Functor&lt;T&gt; {
+
+    @Override
+    public &lt;R&gt; FList&lt;R&gt; map(Function&lt;T, R&gt; f) {
+        FList&lt;R&gt; result = new FList&lt;&gt;();
+        for (int i = 0; i &lt; size(); i++) {
+            R newElement = f.apply(get(i));
+            result.add(newElement);
+        }
+        return result;
+    }
+}
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">FList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customers</span> = getAllCustomers<span style="color: #51afef;">()</span>;</code>
-<code><span style="color: #ECBE7B;">FList</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">cities</span> = customers</code>
-<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >FList&lt;Customer&gt; customers = getAllCustomers();
+FList&lt;String&gt; cities = customers
+    .map(Customer::getAddress)
+    .map(Address::getCity);
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgf073df6-split">
+<section>
 <p>
 Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-haskell"><code trim><code><span style="color: #51afef;">instance</span> <span style="color: #ECBE7B;">Functor</span> <span style="color: #ECBE7B;">[]</span> <span style="color: #51afef;">where</span></code>
-<code>  fmap <span style="color: #dcaeea;">=</span> map</code>
+<pre><code class="haskell" >instance Functor [] where
+  fmap = map
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">fmap</span> (<span style="color: #dcaeea;">*</span> <span style="color: #da8548; font-weight: bold;">2</span>) [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>]</code>
+<pre class="fragment (roll-in)"><code class="haskell" >fmap (* 2) [1, 2, 3, 4]
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code>(<span style="color: #dcaeea;">*</span> <span style="color: #da8548; font-weight: bold;">2</span>) <span style="color: #dcaeea;">&lt;$&gt;</span> [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>, <span style="color: #da8548; font-weight: bold;">4</span>]</code>
+<pre class="fragment (roll-in)"><code class="haskell" >(* 2) &lt;$&gt; [1, 2, 3, 4]
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org6a91c3c">
-<h4 id="org6a91c3c">Promise</h4>
+<section id="slide-org48686f5">
+<h4 id="org48686f5">Promise</h4>
 <aside class="notes">
 <p>
 Определение функтора не накладывает никаких ограничений ни на структуру
@@ -1071,28 +1047,26 @@ Haskell
 </aside>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">R</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> ... <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class Promise&lt;T&gt; implements Functor&lt;T&gt; {
+    public &lt;R&gt; Promise&lt;R&gt; map(Function&lt;T, R&gt; f) { ... }
+}
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = customerServiceApi.getCustomerById<span style="color: #51afef;">(</span>id<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = customer</code>
-<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >Promise&lt;Customer&gt; customer = customerServiceApi.getCustomerById(id);
+Promise&lt;String&gt; city = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity);
 </code></pre>
 </div>
 
 </section>
+<section id="slide-org01d1fac">
+<h2 id="org01d1fac">Monad</h2>
 </section>
 <section>
-<section id="slide-orgb837e80">
-<h2 id="orgb837e80">Monad</h2>
-</section>
-<section id="slide-orgb837e80-split">
 <aside class="notes">
 <p>
 Функтор удобный и часто используемый паттерн, но в некоторых ситуациях он нам не
@@ -1109,39 +1083,42 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findCustomerByName</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">name</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<pre><code class="java" >public Optional&lt;Manager&gt; findLocalManager(String city) { ... }
+public Optional&lt;Customer&gt; findCustomerByName(String name) { ... }
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #5B6268;">//</span><span style="color: #5B6268;">...</span></code>
-<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">manager</span> = customer</code>
-<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>city -&gt; findLocalManager<span style="color: #c678dd;">(</span>city<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >public Optional&lt;Manager&gt; findLocalManager(String city) { ... }
+
+//...
+Optional&lt;Customer&gt; customer = findCustomerByName(name);
+Optional&lt;Optional&lt;Manager&gt;&gt; manager = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity)
+    .map(city -&gt; findLocalManager(city));
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orgb837e80-split">
+<section>
 <aside class="notes">
 <p>
 Функция map из определения функтора имеет следующую сигнатуру:
 </p>
 
 </aside>
+<p>
+map
+</p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">A</span>, <span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">fn</span><span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >public &lt;B&gt; Functor&lt;B&gt; map(Function&lt;A, B&gt; fn);
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">fmap</span> <span style="color: #dcaeea;">::</span> (a <span style="color: #dcaeea;">-&gt;</span> b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
+<pre class="fragment (roll-in)"><code class="haskell" >fmap :: (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
 </div>
 
@@ -1153,19 +1130,22 @@ Optional&lt;Optional&lt;Manager&gt;&gt; с которым потом не пон
 
 </aside>
 
+<p class="fragment (roll-in)">
+flatMap
+</p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #51afef;">&gt;</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">flatMap</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">A</span>, <span style="color: #ECBE7B;">Functor</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #98be65;">&gt;</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">fn</span><span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >public &lt;B&gt; Functor&lt;B&gt; flatMap(Function&lt;A, Functor&lt;B&gt;&gt; fn);
 </code></pre>
 </div>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #c678dd;">flatMap</span> <span style="color: #dcaeea;">::</span> (a <span style="color: #dcaeea;">-&gt;</span> f b) <span style="color: #dcaeea;">-&gt;</span> f a <span style="color: #dcaeea;">-&gt;</span> f b</code>
+<pre class="fragment (roll-in)"><code class="haskell" >flatMap :: (a -&gt; f b) -&gt; f a -&gt; f b
 </code></pre>
 </div>
 </section>
-<section id="slide-orgd8cfca7">
-<h3 id="orgd8cfca7">Overview</h3>
+<section id="slide-org212c346">
+<h3 id="org212c346">Overview</h3>
 <aside class="notes">
 <p>
 Монада — это общий способ описать идею последовательных вычислений, которые
@@ -1194,9 +1174,9 @@ Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">interface</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">M</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #c678dd;">&lt;</span>?, ?<span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">extends</span> <span style="color: #ECBE7B;">Functor</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #ECBE7B;">M</span> <span style="color: #c678dd;">flatMap</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">M</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >public interface Monad&lt;T, M extends Monad&lt;?, ?&gt;&gt; extends Functor&lt;T&gt; {
+    M flatMap(Function&lt;T, M&gt; f);
+}
 </code></pre>
 </div>
 
@@ -1208,19 +1188,19 @@ Haskell
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Functor</span> m <span style="color: #dcaeea;">=&gt;</span> <span style="color: #ECBE7B;">Monad</span> m <span style="color: #51afef;">where</span></code>
-<code>    (<span style="color: #dcaeea;">&gt;&gt;=</span>)   <span style="color: #dcaeea;">::</span> m a <span style="color: #dcaeea;">-&gt;</span> (a <span style="color: #dcaeea;">-&gt;</span> m b) <span style="color: #dcaeea;">-&gt;</span> m b</code>
-<code>    return  <span style="color: #dcaeea;">::</span> a <span style="color: #dcaeea;">-&gt;</span> m a</code>
+<pre class="fragment (roll-in)"><code class="haskell" >class Functor m =&gt; Monad m where
+    (&gt;&gt;=)   :: m a -&gt; (a -&gt; m b) -&gt; m b
+    return  :: a -&gt; m a
 </code></pre>
 </div>
 </section>
-<section id="slide-org36f9288">
-<h3 id="org36f9288">Examples</h3>
-<div class="outline-text-3" id="text-org36f9288">
+<section id="slide-org3b0a1b3">
+<h3 id="org3b0a1b3">Examples</h3>
+<div class="outline-text-3" id="text-org3b0a1b3">
 </div>
 </section>
-<section id="slide-org94eca9b">
-<h4 id="org94eca9b">Optional</h4>
+<section id="slide-org42fa664">
+<h4 id="org42fa664">Optional</h4>
 <aside class="notes">
 <p>
 Попробуем написать имплементацию этого интерфейса для Optional.
@@ -1228,47 +1208,47 @@ Haskell
 
 </aside>
 
-<div class="LARGE_SRC">
+<div class="LARGE_SRC" id="orgae90826">
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span>;</code>
-<code></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #c678dd;">Optional</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">value</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">this</span>.value = value;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">of</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">a</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;&gt;(</span>a<span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #98be65;">&lt;&gt;(</span><span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #a9a1e1;">@Override</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">B</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">fn</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>value == <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
-<code>            <span style="color: #51afef;">return</span> empty<span style="color: #98be65;">()</span>;</code>
-<code>        <span style="color: #51afef;">else</span></code>
-<code>            <span style="color: #51afef;">return</span> of<span style="color: #98be65;">(</span>fn.apply<span style="color: #51afef;">(</span>value<span style="color: #51afef;">)</span><span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #a9a1e1;">@Override</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">flatMap</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">T</span>, <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">T</span><span style="color: #51afef;">&gt;</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">fn</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>value == <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
-<code>            <span style="color: #51afef;">return</span> empty<span style="color: #98be65;">()</span>;</code>
-<code>        <span style="color: #51afef;">else</span></code>
-<code>            <span style="color: #51afef;">return</span> fn.apply<span style="color: #98be65;">(</span>value<span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class Optional&lt;T&gt; implements Monad&lt;T, Optional&lt;T&gt;&gt; {
+    private final T value;
+
+    private Optional(T value) {
+        this.value = value;
+    }
+
+    public static &lt;T&gt; Optional&lt;T&gt; of(T a) {
+        return new Optional&lt;&gt;(a);
+    }
+
+    public static &lt;T&gt; Optional&lt;T&gt; empty() {
+        return new Optional&lt;&gt;(null);
+    }
+
+    @Override
+    public &lt;B&gt; Optional&lt;B&gt; map(Function&lt;T, B&gt; fn) {
+        if (value == null)
+            return empty();
+        else
+            return of(fn.apply(value));
+    }
+
+    @Override
+    public Optional&lt;T&gt; flatMap(Function&lt;T, Optional&lt;T&gt;&gt; fn) {
+        if (value == null)
+            return empty();
+        else
+            return fn.apply(value);
+    }
+}
 </code></pre>
 </div>
 
 </div>
 
 </section>
-<section id="slide-org94eca9b-split">
+<section>
 <aside class="notes">
 <p>
 Вернемся к нашему примеру, где мы хотели найти менеджера для клиента. Теперь он
@@ -1278,36 +1258,36 @@ Haskell
 </aside>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">findLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #5B6268;">//</span><span style="color: #5B6268;">...</span></code>
-<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">customer</span> = findCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span>;</code>
-<code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">manager</span> = customer</code>
-<code>    .map<span style="color: #51afef;">(</span>Customer::getAddress<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span></code>
-<code>    .flatMap<span style="color: #51afef;">(</span><span style="color: #51afef;">this</span>::findLocalManager<span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >public Optional&lt;Manager&gt; findLocalManager(String city) { ... }
+
+//...
+Optional&lt;Customer&gt; customer = findCustomerByName(name);
+Optional&lt;Manager&gt; manager = customer
+    .map(Customer::getAddress)
+    .map(Address::getCity)
+    .flatMap(this::findLocalManager);
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org94eca9b-split">
+<section>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">PersonalData</span> <span style="color: #dcaeea;">personalData</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">PersonalData</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Contact</span> <span style="color: #dcaeea;">contact</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Contact</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Address</span> <span style="color: #dcaeea;">address</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Address</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class Person {
+    private PersonalData personalData;
+}
+
+class PersonalData {
+    private Contact contact;
+}
+
+class Contact {
+    private Address address;
+}
+
+class Address {
+    private String city;
+}
 </code></pre>
 </div>
 
@@ -1329,43 +1309,43 @@ Haskell
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span> = <span style="color: #a9a1e1;">null</span>;</code>
-<code><span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span>person.getPersonalData<span style="color: #c678dd;">()</span> != <span style="color: #a9a1e1;">null</span></code>
-<code>    &amp;&amp; person.getPersonalData<span style="color: #c678dd;">()</span>.getContact<span style="color: #c678dd;">()</span> != <span style="color: #a9a1e1;">null</span></code>
-<code>    &amp;&amp; person.getPersonalData<span style="color: #c678dd;">()</span>.getContact<span style="color: #c678dd;">()</span>.getAddress<span style="color: #c678dd;">()</span> != <span style="color: #a9a1e1;">null</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span></code>
-<code>    city = person.getPersonalData<span style="color: #c678dd;">()</span>.getContact<span style="color: #c678dd;">()</span>.getAddress<span style="color: #c678dd;">()</span>.getCity<span style="color: #c678dd;">()</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre class="fragment (roll-in)"><code class="java" >String city = null;
+if (person.getPersonalData() != null
+    &amp;&amp; person.getPersonalData().getContact() != null
+    &amp;&amp; person.getPersonalData().getContact().getAddress() != null) {
+    city = person.getPersonalData().getContact().getAddress().getCity();
+}
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org94eca9b-split">
+<section>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Person</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">PersonalData</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">personalData</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">PersonalData</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Contact</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">contact</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Contact</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">Optional</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">Address</span><span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">address</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Address</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">city</span>;</code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >class Person {
+    private Optional&lt;PersonalData&gt; personalData;
+}
+
+class PersonalData {
+    private Optional&lt;Contact&gt; contact;
+}
+
+class Contact {
+    private Optional&lt;Address&gt; address;
+}
+
+class Address {
+    private String city;
+}
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Optional</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">String</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">city</span> = person.getPersonalData<span style="color: #51afef;">()</span></code>
-<code>    .flatMap<span style="color: #51afef;">(</span>PersonalData::getContact<span style="color: #51afef;">)</span></code>
-<code>    .flatMap<span style="color: #51afef;">(</span>Contact::getAddress<span style="color: #51afef;">)</span></code>
-<code>    .map<span style="color: #51afef;">(</span>Address::getCity<span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >Optional&lt;String&gt; city = person.getPersonalData()
+    .flatMap(PersonalData::getContact)
+    .flatMap(Contact::getAddress)
+    .map(Address::getCity);
 </code></pre>
 </div>
 <aside class="notes">
@@ -1377,8 +1357,8 @@ Haskell
 </aside>
 
 </section>
-<section id="slide-org771d616">
-<h4 id="org771d616">Promise</h4>
+<section id="slide-org2273a18">
+<h4 id="org2273a18">Promise</h4>
 <aside class="notes">
 <p>
 Давайте посмотрим на функции ниже и подумаем как нам сделать следующее: получить
@@ -1399,25 +1379,25 @@ Haskell
 </aside>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getCustomerByName</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">name</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Address</span> <span style="color: #dcaeea;">address</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">scheduleMeeting</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Manager</span> <span style="color: #dcaeea;">m</span>, <span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">c</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
+<pre><code class="java" >public Promise&lt;Customer&gt; getCustomerByName(String name) { ... }
+public Promise&lt;Manager&gt; getLocalManager(Address address) { ... }
+public Promise&lt;Meeting&gt; scheduleMeeting(Manager m, Customer c) { ... }
 </code></pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #ECBE7B;">Promise</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">meeting</span> = getCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span></code>
-<code>    .flatMap<span style="color: #51afef;">(</span>customer -&gt;</code>
-<code>             getLocalManager<span style="color: #c678dd;">(</span>customer.getAddress<span style="color: #98be65;">()</span><span style="color: #c678dd;">)</span></code>
-<code>                 .flatMap<span style="color: #c678dd;">(</span>manager -&gt;</code>
-<code>                          scheduleMeeting<span style="color: #98be65;">(</span>manager, customer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre class="fragment (roll-in)"><code class="java" >Promise&lt;Meeting&gt; meeting = getCustomerByName(name)
+    .flatMap(customer -&gt;
+             getLocalManager(customer.getAddress())
+                 .flatMap(manager -&gt;
+                          scheduleMeeting(manager, customer)));
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org9043f2e">
-<h4 id="org9043f2e">For comprehension</h4>
+<section id="slide-org86b47ad">
+<h4 id="org86b47ad">For comprehension</h4>
 <aside class="notes">
 <p>
 В Haskell и Scala монады настолько распространены, что существует специальный
@@ -1427,18 +1407,18 @@ Haskell
 
 </aside>
 </section>
-<section id="slide-org9043f2e-split">
+<section>
 <p>
 Scala:
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-scala"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> getCustomerByName(name)</code>
-<code>  .flatMap(customer <span style="color: #51afef;">=&gt;</span></code>
-<code>      getLocalManager(customer.address)</code>
-<code>        .flatMap(manager <span style="color: #51afef;">=&gt;</span></code>
-<code>          scheduleMeeting(manager, customer))</code>
-<code>  )</code>
+<pre><code class="scala" >val meeting = getCustomerByName(name)
+  .flatMap(customer =&gt;
+      getLocalManager(customer.address)
+        .flatMap(manager =&gt;
+          scheduleMeeting(manager, customer))
+  )
 </code></pre>
 </div>
 
@@ -1450,11 +1430,11 @@ Scala:
 </aside>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> <span style="color: #51afef;">for</span> {</code>
-<code>  customer <span style="color: #51afef;">&lt;-</span> getCustomerByName(name)</code>
-<code>  manager <span style="color: #51afef;">&lt;-</span> getLocalManager(customer.address)</code>
-<code>  meeting <span style="color: #51afef;">&lt;-</span> scheduleMeeting(manager, customer)</code>
-<code>} <span style="color: #51afef;">yield</span> meeting</code>
+<pre class="fragment (roll-in)"><code class="scala" >val meeting = for {
+  customer &lt;- getCustomerByName(name)
+  manager &lt;- getLocalManager(customer.address)
+  meeting &lt;- scheduleMeeting(manager, customer)
+} yield meeting
 </code></pre>
 </div>
 
@@ -1466,8 +1446,8 @@ Scala:
 </aside>
 
 </section>
-<section id="slide-orga09e793">
-<h4 id="orga09e793">Either</h4>
+<section id="slide-orga427d22">
+<h4 id="orga427d22">Either</h4>
 <aside class="notes">
 <p>
 Either - еще одна распространенная монада. Она реализует семантику вычислений
@@ -1478,49 +1458,49 @@ Either - еще одна распространенная монада. Она �
 </p>
 
 </aside>
-<div class="LARGE_SRC">
+<div class="LARGE_SRC" id="org9b53bd1">
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Monad</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">R</span>, <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span><span style="color: #51afef;">&gt;</span> <span style="color: #51afef;">{</span></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">L</span> <span style="color: #dcaeea;">leftVal</span>;</code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">rightVal</span>;</code>
-<code></code>
-<code>    <span style="color: #51afef;">private</span> <span style="color: #c678dd;">Either</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">L</span> <span style="color: #dcaeea;">left</span>, <span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">right</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">this</span>.leftVal = left;</code>
-<code>        <span style="color: #51afef;">this</span>.rightVal = right;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">left</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">L</span> <span style="color: #dcaeea;">left</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Either</span><span style="color: #98be65;">&lt;&gt;(</span>left, <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">right</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">R</span> <span style="color: #dcaeea;">right</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">return</span> <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Either</span><span style="color: #98be65;">&lt;&gt;(</span><span style="color: #a9a1e1;">null</span>, right<span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #a9a1e1;">@Override</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">flatMap</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">R</span>, <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">R</span><span style="color: #51afef;">&gt;</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>leftVal != <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
-<code>            <span style="color: #51afef;">return</span> left<span style="color: #98be65;">(</span>leftVal<span style="color: #98be65;">)</span>;</code>
-<code>        <span style="color: #51afef;">else</span></code>
-<code>            <span style="color: #51afef;">return</span> f.apply<span style="color: #98be65;">(</span>rightVal<span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code></code>
-<code>    <span style="color: #a9a1e1;">@Override</span></code>
-<code>    <span style="color: #51afef;">public</span> <span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #ECBE7B;">Either</span><span style="color: #c678dd;">&lt;</span><span style="color: #ECBE7B;">L</span>, <span style="color: #ECBE7B;">B</span><span style="color: #c678dd;">&gt;</span> <span style="color: #c678dd;">map</span><span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Function</span><span style="color: #98be65;">&lt;</span><span style="color: #ECBE7B;">R</span>, <span style="color: #ECBE7B;">B</span><span style="color: #98be65;">&gt;</span> <span style="color: #dcaeea;">f</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span></code>
-<code>        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>leftVal != <span style="color: #a9a1e1;">null</span><span style="color: #98be65;">)</span></code>
-<code>            <span style="color: #51afef;">return</span> left<span style="color: #98be65;">(</span>leftVal<span style="color: #98be65;">)</span>;</code>
-<code>        <span style="color: #51afef;">else</span></code>
-<code>            <span style="color: #51afef;">return</span> right<span style="color: #98be65;">(</span>f.apply<span style="color: #51afef;">(</span>rightVal<span style="color: #51afef;">)</span><span style="color: #98be65;">)</span>;</code>
-<code>    <span style="color: #c678dd;">}</span></code>
-<code><span style="color: #51afef;">}</span></code>
+<pre><code class="java" >public class Either&lt;L, R&gt; implements Monad&lt;R, Either&lt;L, R&gt;&gt; {
+    private final L leftVal;
+    private final R rightVal;
+
+    private Either(L left, R right) {
+        this.leftVal = left;
+        this.rightVal = right;
+    }
+
+    public static &lt;L, R&gt; Either&lt;L, R&gt; left(L left) {
+        return new Either&lt;&gt;(left, null);
+    }
+
+    public static &lt;L, R&gt; Either&lt;L, R&gt; right(R right) {
+        return new Either&lt;&gt;(null, right);
+    }
+
+    @Override
+    public Either&lt;L, R&gt; flatMap(Function&lt;R, Either&lt;L, R&gt;&gt; f) {
+        if (leftVal != null)
+            return left(leftVal);
+        else
+            return f.apply(rightVal);
+    }
+
+    @Override
+    public &lt;B&gt; Either&lt;L, B&gt; map(Function&lt;R, B&gt; f) {
+        if (leftVal != null)
+            return left(leftVal);
+        else
+            return right(f.apply(rightVal));
+    }
+}
 </code></pre>
 </div>
 
 </div>
 
 </section>
-<section id="slide-orga09e793-split">
+<section>
 <aside class="notes">
 <p>
 И снова, как мы видим, поменяв тип с Promise на Either, основной алгоритм не
@@ -1540,15 +1520,15 @@ Java
 </p>
 <div class="org-src-container">
 
-<pre  class="src src-java"><code trim><code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Err</span>, <span style="color: #ECBE7B;">Customer</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getCustomerByName</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">name</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Err</span>, <span style="color: #ECBE7B;">Manager</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">getLocalManager</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Address</span> <span style="color: #dcaeea;">address</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code><span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">Err</span>, <span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #c678dd;">scheduleMeeting</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">Manager</span> <span style="color: #dcaeea;">m</span>, <span style="color: #ECBE7B;">Customer</span> <span style="color: #dcaeea;">c</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> ... <span style="color: #51afef;">}</span></code>
-<code></code>
-<code><span style="color: #ECBE7B;">Either</span><span style="color: #51afef;">&lt;</span><span style="color: #ECBE7B;">ServiceError</span>, <span style="color: #ECBE7B;">Meeting</span><span style="color: #51afef;">&gt;</span> <span style="color: #dcaeea;">meeting</span> = getCustomerByName<span style="color: #51afef;">(</span>name<span style="color: #51afef;">)</span></code>
-<code>    .flatMap<span style="color: #51afef;">(</span>customer -&gt;</code>
-<code>             getLocalManager<span style="color: #c678dd;">(</span>customer.getAddress<span style="color: #98be65;">()</span><span style="color: #c678dd;">)</span></code>
-<code>             .flatMap<span style="color: #c678dd;">(</span>manager -&gt;</code>
-<code>                      scheduleMeeting<span style="color: #98be65;">(</span>manager, customer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>;</code>
+<pre><code class="java" >public Either&lt;Err, Customer&gt; getCustomerByName(String name) { ... }
+public Either&lt;Err, Manager&gt; getLocalManager(Address address) { ... }
+public Either&lt;Err, Meeting&gt; scheduleMeeting(Manager m, Customer c) { ... }
+
+Either&lt;Err, Meeting&gt; meeting = getCustomerByName(name)
+    .flatMap(customer -&gt;
+             getLocalManager(customer.getAddress())
+             .flatMap(manager -&gt;
+                      scheduleMeeting(manager, customer)));
 </code></pre>
 </div>
 <p class="fragment (roll-in)">
@@ -1556,21 +1536,19 @@ Scala
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment (roll-in)"><code trim><code><span style="color: #51afef;">val</span> <span style="color: #dcaeea;">meeting</span> <span style="color: #51afef;">=</span> <span style="color: #51afef;">for</span> {</code>
-<code>  customer <span style="color: #51afef;">&lt;-</span> getCustomerByName(name)</code>
-<code>  manager <span style="color: #51afef;">&lt;-</span> getLocalManager(customer.address)</code>
-<code>  meeting <span style="color: #51afef;">&lt;-</span> scheduleMeeting(manager, customer)</code>
-<code>} <span style="color: #51afef;">yield</span> meeting</code>
+<pre class="fragment (roll-in)"><code class="scala" >val meeting = for {
+  customer &lt;- getCustomerByName(name)
+  manager &lt;- getLocalManager(customer.address)
+  meeting &lt;- scheduleMeeting(manager, customer)
+} yield meeting
 </code></pre>
 </div>
 </section>
+<section id="slide-org9d5e7c2">
+<h2 id="org9d5e7c2">Thank you!</h2>
 </section>
 <section>
-<section id="slide-org27bfda2">
-<h2 id="org27bfda2">Thank you!</h2>
-</section>
-<section id="slide-org27bfda2-split">
-<blockquote nil>
+<blockquote>
 <p>
 Simplicity and elegance are unpopular because they require hard work and
 discipline to achieve and education to be appreciated.
@@ -1606,21 +1584,39 @@ And to make matters worse: complexity sells better.
 </section>
 </div>
 </div>
-<script src="./reveal.js-3.8.0/js/reveal.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/highlight/highlight.js"></script>
 <script>
 // Full list of configuration options available here:
 // https://github.com/hakimel/reveal.js#configuration
 Reveal.initialize({
-multiplex: {
-    secret: '', // null if client
-    id: '', // id, obtained from socket.io server
-    url: '' // Location of socket.io server
-},
 
-// Optional libraries used to extend on reveal.js
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: false,
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+overview: true,
+width: 1200,
+height: 800,
+
+transition: 'fade',
+transitionSpeed: 'default',
+
+// Plugins with reveal.js 4.x
+plugins: [ RevealNotes, RevealHighlight ],
+
+// Optional libraries used to extend reveal.js
 dependencies: [
- { src: './reveal.js-3.8.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+]
+
 });
 </script>
 </body>
